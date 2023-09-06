@@ -2,4 +2,4 @@
 A simple, user-friendly website where users can input molecules (a string) and use RDkit, an open source Python package, to calculate various descriptors.
 
 ## Oppdateres etter hvert
-- ```git pull```
+- For å hente nyeste versjon kjøres ```bash git pull``` i terminalen
