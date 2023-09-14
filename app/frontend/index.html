@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+    <title>MolDescriptor</title>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="logo"><a class="title-link" href="index.html">MolDescriptor</a></div>
+        <div class="links">
+            <a href="pages/draw.html" class="draw-link">DRAW</a>
+            <a href="pages/docs.html" class="docs-link">DOCS</a>
+            <a href="pages/about.html" class="about-link">OM</a>
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h1 class="subheader">PyDescriptor</h1>
+        <form>
+            <label for="inputField">Input a molecule using the 'SMILES' format:</label>
+            <br>
+            <input type="text" id="inputField" placeholder="n1ccccc1" required>
+            <div class="checkbox-container">
+                <label>
+                    <input type="checkbox" id="displayMolecule" checked> Display Molecule
+                </label>
+                <label>
+                    <input type="checkbox" id="molecularWeight"> Molecular Weight
+                </label>
+                <label>
+                    <input type="checkbox" id="PSA"> Polar Surface Area
+                </label>
+                <label>
+                    <input type="checkbox" id="clogP"> clogP
+                </label>
+                <label>
+                    <input type="checkbox" id="QED"> QED
+                </label>
+                <label>
+                    <input type="checkbox" id="numAtoms"> Number of Atoms
+                </label>
+                <label>
+                    <input type="checkbox" id="freeSasa"> FreeSASA
+                </label>
+            </div>
+            <input type="submit" value="Get Result">
+        </form>
+        <div id="resultArea"></div>
+    </div>
+</body>
+</html>
