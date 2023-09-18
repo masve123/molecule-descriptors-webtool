@@ -4,6 +4,7 @@ from rdkit import Chem
 from rdkit.Chem import Descriptors
 from rdkit.Chem import QED
 from rdkit.Chem import Crippen
+from rdkit.Chem import Lipinski, AllChem
 import pandas as pd
 from typing import List, Dict, Union, Optional
 
@@ -28,7 +29,22 @@ def calculate_descriptors(smiles_string: str, selected_descriptors: Optional[Lis
         "molecular_weight": Descriptors.MolWt,
         "QED": QED.qed,
         "clogP": Crippen.MolLogP,
-        # You can add more descriptors here as needed
+        "polar_surface_area": Descriptors.TPSA,
+        "number_of_h-bond_donors": Lipinski.NumHDonors,
+        "number_of_h-bond_acceptors": Lipinski.NumHAcceptors,
+        "number_of_rotatable_bonds": Lipinski.NumRotatableBonds,
+        "number_of_rings": Lipinski.RingCount,
+        "number_of_aromatic_rings": Lipinski.NumAromaticRings,
+        "number_of_heavy_atoms": Lipinski.HeavyAtomCount,
+        "number_of_heteroatoms": Lipinski.NumHeteroatoms,
+        "number_of_amide_bonds": Lipinski.NumAmideBonds,
+        "number_of_rotatable_bonds": Lipinski.NumRotatableBonds,
+        "number_of_strict_rotable_bonds": Lipinski.NumStrictRotatableBonds,
+        "number_of_nitrogen_atoms": Lipinski.NumN,
+        "number_of_carbon_atoms": Lipinski.NumC,
+        "number_of_oxygen_atoms": Lipinski.NumO,
+        # FreeSASA <not implemented yet>
+
     }
 
     # If no descriptors are selected, return all by default
@@ -50,6 +66,9 @@ def get_mol(smiles_string: str) -> Chem.Mol:
     
     if mol is None:
         return {"error": "Invalid SMILES string."}
+    
+    #Add additional error handling here
+
     return mol
 
 
