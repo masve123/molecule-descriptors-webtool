@@ -1,6 +1,3 @@
-
-
-8b97152fbfdb391ba3ce38b55d1f02c54ba066ae
 # molecule-descriptors-webtool
 A simple, user-friendly website where users can input molecules (a string) and use RDkit, an open source Python package, to calculate various descriptors.
 
@@ -14,8 +11,6 @@ A simple, user-friendly website where users can input molecules (a string) and u
 
 ## For å hente nyeste versjon kjøres git pull i terminalen
 I den første versjonen har jeg laget et utkast til backend-delen av prosjektet. For å laste ned de riktige pakkene kan man kjøre pip install -r requirements.txt i terminalen etter å ha pullet prosjektet.
-
-
 
 - /static: 
 This directory is used to store static files, such as CSS files, JavaScript files, and images. These files don't change and are served as-is to the client.
