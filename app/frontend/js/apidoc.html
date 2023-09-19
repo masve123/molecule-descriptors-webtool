@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Get The Molecule</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<style>
+		div#sketch {
+			padding-top: 2em;
+			padding-bottom: 1em;
+		}
+	</style>
+</head>
+<body>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="../index.html">Back to index</a></div>
+	<h1>Integration Guide</h1>
+ 
+<script src="client/client.js"></script>
+<div id="sketch"></div>
+
+<script>
+function onLoad(payload) {
+    console.log("onLoad...");
+    editor = payload;
+}
+function error(error) {
+    console.log(error);
+}
+  ChemaxonMarvinJs.createEditor("sketch", '..').then(onLoad,error);
+</script>
+<p>This API provides a seamless solution to integrate Marvin JS editor into your HTML page no matter whether the resources of the Marvin JS editor are located on the same domain or not.<br>It also resolves CORS issues when you load and run the editor from a different domain.</p>
+<p>You can control from which domains the editor is available. The default rule is strict, that is, only the same domain is accepted.<br>See the configuration on how to control domain restrictions.</p>
+<h2 id="setting-up-access-rules">Setting Up Access Rules</h2>
+<p>The <strong>js/origin.js</strong> file lists the accepted domains. You can add domains to it by either using strings or regular expressions.</p>
+<p>Accept only same origin:</p>
+<pre><code class="lang-javascript">window.domain = window.origin
+</code></pre>
+<p>No restriction:</p>
+<pre><code class="lang-javascript">window.domains=&#39;*&#39;
+</code></pre>
+<p>Exact domain:</p>
+<pre><code class="lang-javascript">window.domains=&#39;http://localhost:8080&#39;
+</code></pre>
+<p>More domains (either localhost or example.com through any port and with any protocol):</p>
+<pre><code class="lang-javascript">window.domains=/(https?:\/\/)(localhost|\S+\.example\.com)(:\d+)?/gm
+</code></pre>
+<h2 id="basic-example">Basic Example</h2>
+<p>Follow the steps below to insert an editor into your page.</p>
+<ol>
+<li>Load the <strong><em>client.js</em></strong> file of the Marvin JS package. It will load the <strong><em>ChemaxonMarvinJs</em></strong> API.</li>
+<li>Define a <strong><em>div</em></strong> DOM element with a unique ID where would you like to insert the editor.</li>
+<li>Call the <strong><em>createEditor</em></strong> method and give the ID of the above <strong><em>div</em></strong> as parameter.</li>
+</ol>
+<p>The editor will be displayed in the desired <strong><em>div</em></strong> element.</p>
+<pre><code class="lang-html">&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;script src=&quot;js/client/client.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div id=&quot;sketch&quot;&gt;&lt;/div&gt;
+    &lt;script&gt;
+        ChemaxonMarvinJs.createEditor(&quot;sketch&quot;);
+    &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<h2 id="api-usage">API Usage</h2>
+<p>The <strong><em>createEditor</em></strong> method returns with a <strong><em>Promise</em></strong> object that is resolved with a reference to the editor object when it is loaded.</p>
+<pre><code class="lang-html">&lt;script&gt;
+    ChemaxonMarvinJs.createEditor(&quot;sketch&quot;, &quot;http://localhost:8080/&quot;);
+&lt;/script&gt;
+</code></pre>
+<pre><code class="lang-javascript">createEditor(parentID: string, marvinUrl: string, settings: any): Promise&lt;Editor&gt;
+</code></pre>
+<p>The <strong><em>createEditor</em></strong> method expects the following parameters:</p>
+<ul>
+<li><strong>parentID</strong>: ID of the parent element where the editor is going to be inserted. If it cannot be found, the editor is appended to the end of the document.</li>
+<li><strong>marvinUrl</strong>: The URL of the Marvin JS directory (it can be relative or absolute url but only <strong>http:</strong> and <strong>https:</strong> protocols are accepted).</li>
+<li><strong>settings</strong>: a JSON with thed isplay settings (leave it empty unless you need customization).</li>
+</ul>
+<p>The editor object provides various methods to control the usage of the loaded editor component. Each of them returns with a <strong><em>Promise</em></strong> object as there are async callings in the background.</p>
+<h2 id="editor">Editor</h2>
+<pre><code class="lang-html">&lt;script&gt;
+    ChemaxonMarvinJs.createEditor(&quot;sketch&quot;,&#39;..&#39;).then(function(e) {
+        editor = e;
+        editor.importStructure(&#39;smiles&#39;,&#39;CCC&#39;);
+    });
+&lt;/script&gt;
+</code></pre>
+<h3 id="molecule-import">Molecule Import</h3>
+<pre><code class="lang-javascript">importStructure(format: string, source: string, options: any): Promise&lt;void&gt;
+</code></pre>
+<p>Load a structure into the editor.</p>
+<ul>
+<li><strong>format</strong>: Input format of the given structure (null or empty string for auto recognition).</li>
+<li><strong>source</strong>: The molecule source to be imported.</li>
+<li><strong>options</strong>: Import options in JSON format (optional parameter).</li>
+</ul>
+<p>How to import SMILES:</p>
+<pre><code class="lang-javascript">editor.importStructure(&#39;smiles&#39;,&#39;CCCCC&#39;);
+</code></pre>
+<h3 id="paste-structure">Paste Structure</h3>
+<pre><code class="lang-javascript">pasteStructure(format: string, source: string, options: any): Promise&lt;void&gt;
+</code></pre>
+<p>Add the given structure to the editor content, see <a href="#molecule-import">importStructure</a> for parameters.</p>
+<p>How to paste SMILES:</p>
+<pre><code class="lang-javascript">editor.pasteStructure(&#39;smiles&#39;,&#39;CCCCC&#39;);
+</code></pre>
+<h3 id="molecule-export">Molecule Export</h3>
+<pre><code class="lang-javascript">exportStructure(format: string, options: any): Promise&lt;string&gt;
+</code></pre>
+<p>Export the contents of the canvas in the desired molecule format or image (as base64 encoded data uri).</p>
+<ul>
+<li><strong>format</strong>: Output format (chemical format or image type).</li>
+<li><strong>options</strong>: Export options in JSON format (optional). The given properties can be different depending on the output format.</li>
+</ul>
+<p>How to export in MRV format:</p>
+<pre><code class="lang-javascript">editor.exportStructure(&#39;mrv&#39;).then(function (mrv) {
+            console.log(mrv); 
+    });
+</code></pre>
+<p>How to retrieve the image representation of the contents of the canvas and append an image to the end of the document:</p>
+<pre><code class="lang-javascript">editor.exportStructure(&#39;png&#39;, {&#39;background-color&#39;: &#39;red&#39; }).then(function(datauri) {
+    var img = document.createElement(&#39;img&#39;);
+    img.src = datauri;
+    document.appendChild(img);
+});
+</code></pre>
+<h3 id="get-settings">Get Settings</h3>
+<pre><code class="lang-javascript">getDisplaySettings(): Promise&lt;any&gt;
+</code></pre>
+<p>How to retrieve current display settings:</p>
+<pre><code class="lang-javascript">editor.getDisplaySettings().then(function (settings) {
+            console.log(settings); 
+    });
+</code></pre>
+<h3 id="update-settings">Update Settings</h3>
+<pre><code class="lang-javascript">setDisplaySettings(settings: any): Promise&lt;any&gt;
+</code></pre>
+<p>Apply a JSON with various properties to customize the rendering of the editor. You can list most of the controllable properties with the <strong><em>getDisplaySettings</em></strong> method.</p>
+<ul>
+<li><strong>settings</strong>: A JSON with certain display properties to be updated, see available properties <a href="../../jsdoc.html">here</a>.</li>
+</ul>
+<p>How to change carbon label visibility property:</p>
+<pre><code class="lang-javascript">editor.setDisplaySettings({ &#39;carbonLabelVisible&#39;: false });
+</code></pre>
+<h3 id="is-empty">Is Empty</h3>
+<pre><code class="lang-javascript">isEmpty(): Promise&lt;boolean&gt;
+</code></pre>
+<p>Provide information whether the canvas is empty.</p>
+<p>Print canvas state:</p>
+<pre><code class="lang-javascript">editor.isEmpty().then(function(b) {
+    console.log((b? &#39;empty canvas&#39; : &#39;has structure&#39;));
+}); // like isEmpty(): Promise&lt;boolean&gt;;
+</code></pre>
+<h3 id="clear">Clear</h3>
+<pre><code class="lang-javascript">clear(): Promise&lt;void&gt;
+</code></pre>
+<h3 id="event-listeners">Event Listeners</h3>
+<pre><code class="lang-javascript">on(eventType: string, eventHandler: function): Promise&lt;void&gt;
+</code></pre>
+<p>You can register event listeners for the editor (all event types are enumerated in the example).<br>Note that the registered events are performed on the host page. The remote editor only notifies the host page about the changes.</p>
+<pre><code class="lang-javascript">function onChange(eventType) {
+    console.log(eventType + &quot; event is invoked&quot;);
+    editor.exportStructure(&#39;mrv&#39;).then(function(mrv) {
+        molSource = mrv;
+    });
+}
+
+editor.on(&#39;molchange&#39;, function () { onChange(&quot;molchange&quot;) }); // as editor canvas content has been changed (edit content, import structure, undo, redo, ...)
+editor.on(&#39;selectionchange&#39;, function () { onChange(&quot;selectionchange&quot;) }); // as the list of selected atoms/bonds are changed.
+editor.on(&#39;undo&#39;, function () { onChange(&quot;undo&quot;) }); // as undo action is invoked
+editor.on(&#39;redo&#39;, function () { onChange(&quot;redo&quot;) }); // as redo action is invoked
+
+</code></pre>
+
+<div style="clear: both; width: 100%; text-align: right;"><a href="../index.html">Back to index</a></div>
+</body>
+</html>
