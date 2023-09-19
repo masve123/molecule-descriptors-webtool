@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Get The Molecule with Multiple Sgroups</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-3.6.0.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				initControl();
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function initControl () {
+			setupForm();
+			// get mol button
+			$("#exportAs").on("click", function (e) {
+				getEditor().then(printStructure, alert);
+			});
+			$("#setDisplaySettings").on("click", function(e) {
+				getEditor().then(updateSettings, alert);
+			});
+		}
+
+		function printStructure(marvinSketcherInstance) {
+			marvinSketcherInstance.exportStructure(getFormat(),getOptions()).then(function(source) {
+					$("#molsource").text(source);
+				}, function(error) {
+					alert("Molecule export failed:"+error);
+				});
+		}
+
+		function updateSettings(marvinSketcherInstance) {
+			marvinSketcherInstance.setDisplaySettings(getDisplaySettings());
+		}
+
+		function getEditor() {
+			return MarvinJSUtil.getEditor("#sketch");
+		}
+		function setupForm() {
+			$("#format").val("mol")
+			$("#multiplesgroup").prop("checked",true)
+			$("#editor-multiplesgroup").prop("checked",true)
+			$("#editor-copyasmrv").prop("checked", false)
+			// setup initial settings
+			getEditor().then(updateSettings, console.log);
+		}
+
+		function getFormat() {
+			return $("#format").val();
+		}
+
+		function getOptions() {
+			return {
+				multiplesgroup: $("#multiplesgroup").prop("checked")
+			}
+		}
+
+		function getDisplaySettings() {
+			return {
+				multiplesgroup: $("#editor-multiplesgroup").prop("checked"),
+				copyasmrv: $("#editor-copyasmrv").prop("checked")
+			}
+		}
+	</script>
+	<style>
+
+	.notOverflown {
+		max-width: 100%;
+		overflow: hidden;
+	}
+
+	.go2theTop > div {
+		vertical-align: top;
+		display: inline-block;
+	}
+
+	.fieldset > * {
+		display: inline-block;
+		margin-right: 1em;
+	}
+
+	.editor-form legend {
+		display: block;
+		font-weight: bolder;
+		padding-top: 1em;
+		padding-bottom: 0.5em;
+
+	}
+
+	.editor-form legend:first-of-type {
+		padding-top: 0;
+	}
+
+	.editor-from .field {
+		margin-right: 2em;
+	}
+	.editor-form .field label {
+		margin-left: 0.5em;
+	}
+
+	.editor-form textarea {
+		margin-top: 1em;
+		margin-bottom: 1em;
+	}
+
+	</style>
+</head>
+<body>
+	<h1>Marvin JS Example - Get The Molecule with Multiple Sgroups</h1>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+	<div class="go2theTop notOverflown">
+		<div class="resizable notOverflown" style="min-width: 570px">
+			<iframe id="sketch" class="sketcher-frame" data-toolbars="reporting"></iframe>
+			<script>
+				var url = "../editorws.html";
+				if (!!window.URLSearchParams) {
+					var params = new URLSearchParams(window.location.search);
+					if (params.has("experimental")) {
+						url = url + "?multiple_sgroup";
+					}
+				}
+				document.getElementById("sketch").src = url;
+			</script>
+		</div>
+		<div class="notOverflown editor-form">
+				<div class="fieldset">
+					<legend>Export as</legend>
+					<div class="field">
+						<select id="format">
+							<option value="mol">mol</option>
+							<option value="mrv">mrv</option>
+						</select>
+						<label for="format">Format</label>
+					</div>
+					<div class="field">
+						<input id="multiplesgroup" type="checkbox"/><label for="multiplesgroup">Multiple Sgroup</label>
+					</div>
+					<input id="exportAs" type="button" value="Submit" class="submit"/>
+				</div>
+				<textarea id="molsource" rows=10 cols=80 readonly></textarea>
+
+				<div class="fieldset">
+					<legend>Editor settings</legend>
+					<div class="field">
+						<input id="editor-multiplesgroup" type="checkbox"/><label for="editor-multiplesgroup">Multiple Sgroup</label>
+					</div>
+					<div class="field">
+						<input id="editor-copyasmrv" type="checkbox"/><label for="editor-copyasmrv">CopyAsMrvEnabled</label>
+					</div>
+					<input id="setDisplaySettings" type="button" value="Set settings" class="submit"/>
+				</div>
+		</div>
+	</div>
+	<div>
+		<p>When you export an sgroup whose connectivity has not specified and its repetition count is a number greater than zero there are two options how to represent it.
+			The <strong>multiplesgroup</strong> export option help to control it.
+			When its value is <em>true</em> these sgroups appears as contracted multiple sgroups in the generated molecule source. If it is false, these groups are represented as SRU sgroup.</p>
+		<p>
+			This option is applied by both the exportStructure and the setDisplaySettings methods of the Sketcher API.
+			In first case, it is effect only those exportStructure calling when it is explicitly given.
+			In the second case, it is an editor settings to pass export options for internal export calling (like Export dialog, copy and webservice based commands) thatn you can do by the
+		setDisplaySettings method of the editor</p>
+			<p>This example demonstrates how to switch on/off this options in various exportStructure callings and also shows how to specify it at at setDisplaySettings calling.</p>
+			<p>The <em>Submit</em> button trigger exportStructure with the parameters given in the above form. The result of the exportStructure calling has been displayed in the textbox below the button.
+				As you can see the printStructure method has been bind to the onClick event of the button. This method do the export described above.
+				In the event handler there is an getEditor calling that returns with a promise object. When the promise returns with success it call the <em>printStructure</em> called immediately.
+				The <em>getEditor</em> function is responsible to provide the reference to the sketcher object. It is retrieved at each request to avoid reloading issue
+				(if the reference of the editor is cached and you reload the page, the reference can be deprecated).</p>
+				<p>In the <em>Editor settings</em> form, you can control the given editor options. To apply them, push the <em>Set settings</em> button.
+				In default, the copy command place the structure in MolV2000 format. To see the MRV on the clipboard at <strong>CTRL+C</strong>, swith on the CopyAsMrvEnabled checkbox.</p>
+			<pre><code data-language="javascript">$(document).ready(function handleDocumentReady (e) {
+				MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+					marvinSketcherInstance = sketcherInstance;
+					initControl();
+				},function (error) {
+					alert("Cannot retrieve sketcher instance from iframe:"+error);
+				});
+			});
+
+			function initControl () {
+				setupForm();
+				// get mol button
+				$("#exportAs").on("click", function (e) {
+					getEditor().then(printStructure, alert);
+				});
+				$("#setDisplaySettings").on("click", function(e) {
+					getEditor().then(updateSettings, alert);
+				});
+			}
+
+			function printStructure(marvinSketcherInstance) {
+				marvinSketcherInstance.exportStructure(getFormat(),getOptions()).then(function(source) {
+						$("#molsource").text(source);
+					}, function(error) {
+						alert("Molecule export failed:"+error);
+					});
+			}
+
+			function updateSettings(marvinSketcherInstance) {
+				marvinSketcherInstance.setDisplaySettings(getDisplaySettings());
+			}
+
+			function getEditor() {
+				return MarvinJSUtil.getEditor("#sketch");
+			}
+			function setupForm() {
+				$("#format").val("mol")
+				$("#multiplesgroup").prop("checked",true)
+				$("#editor-multiplesgroup").prop("checked",true)
+				$("#editor-copyasmrv").prop("checked", false)
+				// setup initial settings
+				getEditor().then(updateSettings, console.log);
+			}
+
+			function getFormat() {
+				return $("#format").val();
+			}
+
+			function getOptions() {
+				return {
+					multiplesgroup: $("#multiplesgroup").prop("checked")
+				}
+			}
+
+			function getDisplaySettings() {
+				return {
+					multiplesgroup: $("#editor-multiplesgroup").prop("checked"),
+					copyasmrv: $("#editor-copyasmrv").prop("checked")
+				}
+			}
+</code></pre>
+	</div>
+	<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>Marvin JS Example - Calculate properties</title>
+	<link type="text/css" rel="stylesheet" href="../css/doc.css" />
+	<link type="text/css" rel="stylesheet" href="../js/lib/rainbow/github.css" />
+	<script src="../js/lib/jquery-3.6.0.min.js"></script>
+	<script src="../js/lib/rainbow/rainbow-custom.min.js"></script>
+	<script src="../gui/lib/promise-1.0.0.min.js"></script>
+	<script src="../js/marvinjslauncher.js"></script>
+	<script>
+
+		var molsource = "\n\n\n"+
+				" 14 15  0  0  0  0  0  0  0  0999 V2000\n"+
+				"    0.5089    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    1.2234    7.4191    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    6.5941    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    7.8316    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    5.3566    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.2055    7.4191    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    6.1816    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"   -0.9200    6.1816    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    0.5089    8.6566    0.0000 O   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.4929    7.0066    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    7.6740    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.0080    6.3391    0.0000 N   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"    2.2630    8.4586    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0\n"+
+				"  1  7  1  0  0  0  0\n"+
+				"  8  2  1  0  0  0  0\n"+
+				"  1  3  1  0  0  0  0\n"+
+				"  2  3  2  0  0  0  0\n"+
+				"  7  4  1  0  0  0  0\n"+
+				"  4  8  1  0  0  0  0\n"+
+				"  4  9  2  0  0  0  0\n"+
+				"  7  5  1  0  0  0  0\n"+
+				"  8  6  1  0  0  0  0\n"+
+				"  1 10  2  0  0  0  0\n"+
+				"  3 12  1  0  0  0  0\n"+
+				"  2 13  1  0  0  0  0\n"+
+				" 13 11  2  0  0  0  0\n"+
+				" 12 11  1  0  0  0  0\n"+
+				" 12 14  1  0  0  0  0\n"+
+				"M  END\n";
+
+		var SERVICE_URL = window.location.origin+"/rest-v1/util/calculate/elementalAnalysis";
+
+		var marvinSketcherInstance;
+
+		$(document).ready(function handleDocumentReady (e) {
+			MarvinJSUtil.getEditor("#sketch").then(function (sketcherInstance) {
+				marvinSketcherInstance = sketcherInstance;
+				marvinSketcherInstance.on("molchange",calc);
+				marvinSketcherInstance.importStructure("mol", molsource);
+			},function (error) {
+				alert("Cannot retrieve sketcher instance from iframe:"+error);
+			});
+		});
+
+		function calc() {
+			marvinSketcherInstance.exportStructure("mrv").then(function(source) {
+				$.ajax({
+					type: "POST",
+					url: SERVICE_URL,
+					contentType:"application/json; charset=utf-8",
+					dataType:"json",
+					data: JSON.stringify({
+						"inputFormat": "mrv",
+						"mass": true,
+						"formula": true,
+						"structure": source
+					}),
+					success: function(result) {
+						$("#results").text(createResult(result[0].mass, result[0].formula));
+					},
+					error: function(result) {
+						$("#results").text('ERROR \nStatus code: ' + result.status + '\nResponse: ' + result.responseText);
+					}
+				});
+			});
+		}
+
+		function createResult(mass, formula) {
+			return "Calculated properties\n"
+					+      "---------------------\n"
+					+ "mass: " + (mass == 0 ? "" : mass) + "\n"
+					+ "formula: " + (formula == undefined ? "" : formula);
+		}
+
+	</script>
+</head>
+<body>
+<h1>Marvin JS Example - Calculate physical-chemical properties of structures</h1>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+<div class="go2theTop notOverflown">
+	<div class="resizable notOverflown" style="min-width: 570px">
+		<iframe src="../editorws.html" id="sketch" class="sketcher-frame"></iframe>
+	</div>
+	<div id="calculations" class="notOverflown">
+		<textarea id="results" rows=10 cols=80 readonly></textarea>
+	</div>
+</div>
+<div>
+	<p>This example demonstrates how to calculate dynamically some physical-chemical properties, like mass and formula, of a chemical structure. When the content of the Marvin JS sketcher is modified, the calculated properties are automatically updated in the textbox.</p>
+	<p>When the structure is edited in the sketcher, the source of the molecule is exported in MRV format and sent to Marvin JS web services via an <code>$.ajax()</code> call for calculation. If the calculation was successful, the returned <code>result</code> object is accessed and the calculated mass and formula are displayed in the textbox. In case of an unsuccessful event, "ERROR" shows up in the textbox along with a response message from Marvin JS web services.</p>
+	<pre><code data-language="javascript">function calc() {
+	marvinSketcherInstance.exportStructure("mrv").then(function(source) {
+		$.ajax({
+			type: "POST",
+			url: SERVICE_URL,
+			contentType:"application/json; charset=utf-8",
+			dataType:"json",
+			data: JSON.stringify({
+				"inputFormat": "mrv",
+				"mass": true,
+				"formula": true,
+				"structure": source
+			}),
+			success: function(result) {
+				$("#results").text(createResult(result[0].mass, result[0].formula));
+			},
+			error: function(result) {
+				$("#results").text('ERROR \nStatus code: ' + result.status + '\nResponse: ' + result.responseText);
+			}
+		});
+	});
+}</code>
+	</pre>
+</div>
+<div style="clear: both; width: 100%; text-align: right;"><a href="index.html">Back to index</a></div>
+</body>
+</html>

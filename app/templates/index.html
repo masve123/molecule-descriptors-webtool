@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="assets/css/styles.css">
     <title>MolDescriptor</title>
 </head>
+
 <body>
 
     <div class="top-bar">
@@ -19,10 +21,10 @@
 
     <div class="form-container">
         <h1 class="subheader">PyDescriptor</h1>
-        <form>
+        <form action="/identify_molecule" method="post">
             <label for="inputField">Input a molecule using the 'SMILES' format:</label>
             <br>
-            <input type="text" id="inputField" placeholder="n1ccccc1" required>
+            <input type="text" id="smiles" placeholder="n1ccccc1" required>
             <div class="checkbox-container">
                 <label>
                     <input type="checkbox" id="displayMolecule" checked> Display Molecule
@@ -48,7 +50,11 @@
             </div>
             <input type="submit" value="Get Result">
         </form>
+        {% if molecule_name %}
+        <h2>Molecule: {{ molecule_name }}</h2>
+        {% endif %}
         <div id="resultArea"></div>
     </div>
 </body>
+
 </html>

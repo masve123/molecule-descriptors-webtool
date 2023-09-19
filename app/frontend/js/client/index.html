@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="client.js"></script>
+</head>
+<body>
+
+<div id="sketch"></div>
+
+<script>
+function onLoad(payload) {
+    console.log("onLoad...");
+    editor = payload;
+}
+function error(error) {
+    console.log(error);
+}
+  ChemaxonMarvinJs.createEditor("sketch").then(onLoad,error);
+</script>
+</body>
+</html>
+
