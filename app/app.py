@@ -17,7 +17,7 @@ def identify_molecule():
     if molecule is None:
         return render_template('index.html', molecule_name="Invalid SMILES")
     
-    molecule_weight = Descriptors.ExactMolWt(molecule)
+    molecule_weight = utils.calculate_descriptors(molecule)
     return render_template('index.html', molecule_name=molecule_weight)
 
 if __name__ == '__main__':
