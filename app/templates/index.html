@@ -24,34 +24,21 @@
         <form action="/identify_molecule" method="post">
             <label for="inputField">Input a molecule using the 'SMILES' format:</label>
             <br>
-            <input type="text" id="smiles" placeholder="n1ccccc1" required>
+            <input type="text" id="smiles" name="inputField" placeholder="n1ccccc1" required>
             <div class="checkbox-container">
-                <label>
-                    <input type="checkbox" id="displayMolecule" checked> Display Molecule
-                </label>
-                <label>
-                    <input type="checkbox" id="molecularWeight"> Molecular Weight
-                </label>
-                <label>
-                    <input type="checkbox" id="PSA"> Polar Surface Area
-                </label>
-                <label>
-                    <input type="checkbox" id="clogP"> clogP
-                </label>
-                <label>
-                    <input type="checkbox" id="QED"> QED
-                </label>
-                <label>
-                    <input type="checkbox" id="numAtoms"> Number of Atoms
-                </label>
-                <label>
-                    <input type="checkbox" id="freeSasa"> FreeSASA
-                </label>
+                <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
+                <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
+                <!-- Add other checkboxes here -->
             </div>
             <input type="submit" value="Get Result">
         </form>
-        {% if molecule_name %}
-        <h2>Molecule: {{ molecule_name }}</h2>
+        {% if descriptors %}
+        <h2>Descriptors:</h2>
+        <ul>
+            {% for key, value in descriptors.items() %}
+            <li>{{ key }}: {{ value }}</li>
+            {% endfor %}
+        </ul>
         {% endif %}
         <div id="resultArea"></div>
     </div>
