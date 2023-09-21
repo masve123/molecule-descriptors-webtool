@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from rdkit import Chem
 from rdkit.Chem import Descriptors, Draw
 app = Flask(__name__)
+from utils import * # legg til funksjoner her og endre uthenting av molekyler
 
 @app.route('/', methods=['GET'])
 def index():
