@@ -1,0 +1,114 @@
+body, html {
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-color: #eaeded;
+    font-family: Arial, sans-serif;
+}
+
+a.title-link {
+    text-decoration: none; 
+    background: linear-gradient(45deg, #ff8c00, #ff4500); 
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent; 
+    font-size: 24px; 
+    font-weight: bold; 
+}
+
+.form-container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    height: 70vh; 
+    
+}
+
+label[for="inputField"] {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333; 
+    display: block; 
+    margin-bottom: 10px; 
+}
+
+input[type="text"] {
+    margin: 10px 0;
+    width: 100%; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+
+.checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 10px; 
+    align-items: center; 
+    background-color: #fff; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Style the checkboxes */
+label {
+    display: flex;
+    align-items: center; /* Center checkboxes vertically within their container */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow text */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+}
+
+/* Submit button background */
+input[type="submit"] {
+    background-color: #007bff; /* Dark blue button */
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px; /* Add margin to move the button further down */
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+.top-bar {
+    position: relative;
+    z-index: 1000; /* Use a high z-index value */
+    background-color: #fdfefe ; /* Background color for the top bar */
+    color: #000000; /* Text color for links and logo */
+    padding: 15px 0; /* Add padding for spacing */
+    display: flex; /* Use flexbox for layout */
+    justify-content: space-between; /* Center elements horizontally with space in between */
+    align-items: center; /* Center elements vertically */
+}
+
+/* Style the logo or stylized text on the left */
+.logo {
+    font-size: 18px; /* Adjust the font size */
+    font-weight: bold; /* Make it bold if needed */
+    margin-left: 20px; /* Add some spacing from the left edge */
+}
+
+/* Style the centered links */
+.links {
+    text-align: center; /* Center the links horizontally */
+}
+
+.links a {
+    color: #000000; /* Link text color */
+    text-decoration: none; /* Remove underlines */
+    margin: 0 20px; /* Add spacing between links */
+}
+
+.links a:hover {
+    text-decoration: underline; /* Add underline on hover */
+}
