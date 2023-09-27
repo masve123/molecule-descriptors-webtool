@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentation</title>
-    <link rel="stylesheet" href="../css/docs.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/docs.css') }}">
 </head>
 <body>
     <div class="top-bar">
-        <div class="logo"><a class="title-link" href="../index.html">MolDescriptor</a></div>
+        <div class="logo"><a class="title-link" href="{{ url_for('index') }}">MolDescriptor</a></div>
         <div class="links">
-            <a href="draw.html" class="draw-link">DRAW</a>
-            <a href="docs.html" class="docs-link">DOCS</a>
-            <a href="about.html" class="about-link">OM</a>
+            <a href="{{ url_for('draw') }}" class="draw-link">DRAW</a>
+            <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
+            <a href="{{ url_for('about') }}" class="about-link">OM</a>   
         </div>
     </div>
     <div class="container">
