@@ -1,13 +1,19 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory, render_template_string
 from rdkit import Chem
-from rdkit.Chem import Descriptors, Draw
+from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem
+from collections import OrderedDict
+
 
 from io import BytesIO
 import base64
 
 #from app.routes import main  # Replace 'your_folder_name' with the actual folder name where routes.py is located
 
-app = Flask(__name__)
+#app = Flask(__name__)
+app = Flask(__name__, template_folder='templates', static_folder='static')
+#app = Flask(__name__, static_folder='app/frontend', static_url_path='/app/frontend')
+
+
 #app.register_blueprint(main)
 
 @app.route('/')
@@ -35,11 +41,42 @@ def identify_molecule():
             descriptors['MolecularWeight'] = Descriptors.ExactMolWt(molecule)
         if 'PSA' in selected_options:
             descriptors['PSA'] = Descriptors.TPSA(molecule)
-        # Add other descriptors here based on selected_options
+        if 'clogP' in selected_options:
+            descriptors['clogP'] = Crippen.MolLogP(molecule)
+        if 'QED' in selected_options:
+            descriptors['QED'] = QED.qed(molecule)
+        if 'numberOfAtoms' in selected_options:
+            atom_counts = get_atom_counts(molecule)
+            descriptors.update(atom_counts)
+                #descriptors['numberOfAtoms'] = molecule.GetNumAtoms()
+        if 'FreeSASA' in selected_options:
+            # 1. Generate 3D coordinates for the molecule
+            AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
+
+            # 2. Classify atoms and get radii
+            radii = rdFreeSASA.classifyAtoms(molecule)
+
+            # 3. Define SASA options: Using ShrakeRupley algorithm and OONS classifier as an example
+            sasa_opts = rdFreeSASA.SASAOpts(rdFreeSASA.SASAAlgorithm.ShrakeRupley, rdFreeSASA.SASAClassifier.OONS)
+
+            # 4. Compute the SASA and store in descriptors dictionary
+            descriptors['FreeSASA'] = rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)
     else:
         descriptors['Error'] = "Invalid SMILES"
     
     return render_template('index.html', descriptors=descriptors, image=img_str)
+
+def get_atom_counts(molecule):
+    """Returns a dictionary of atom counts for the given molecule."""
+    atom_counts = OrderedDict()  
+    atom_counts["Number of atoms:"] = ""  
+    for atom in molecule.GetAtoms():
+        symbol = atom.GetSymbol()
+        atom_counts[symbol] = atom_counts.get(symbol, 0) + 1
+    return atom_counts
+
+
+
 
 @app.route('/draw')
 def draw():
@@ -52,6 +89,23 @@ def docs():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+
+import os
+
+@app.route('/editor')
+def editor():
+    # Get the directory of the current script
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    file_path = os.path.join(dir_path, 'frontend', 'editor.html')
+
+    with open(file_path, "r") as f:
+        content = f.read()
+    return render_template_string(content)
+
+@app.route('/editor/gui/<path:filename>')
+def editor_resources(filename):
+    return send_from_directory('frontend/gui', filename)
 
 if __name__ == '__main__':
     app.run(debug=True)

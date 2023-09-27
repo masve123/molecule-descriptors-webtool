@@ -15,12 +15,12 @@
         <div class="links">
             <a href="{{ url_for('draw') }}" class="draw-link">DRAW</a>
             <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
-            <a href="{{ url_for('about') }}" class="about-link">OM</a>            
+            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>            
         </div>
     </div>
 
     <div class="form-container">
-        <h1 class="subheader">PyDescriptor</h1>
+        <h1 class="subheader">MolDescriptor</h1>
         <form action="/identify_molecule" method="post">
             <label for="inputField">Input a molecule using the 'SMILES' format:</label>
             <br>
@@ -29,9 +29,16 @@
                 <label><input type="checkbox" name="displayOptions" value="Image"> Display Molecule</label>
                 <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
                 <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
+                <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
+                <label><input type="checkbox" name="displayOptions" value="QED"> QED</label>
+                <label><input type="checkbox" name="displayOptions" value="numberOfAtoms"> Number of Atoms</label>
+                <label><input type="checkbox" name="displayOptions" value="FreeSASA"> Solvent Accessible Surface Area</label>
+
                 <!-- Add other checkboxes here -->
             </div>
             <input type="submit" value="Get Result">
+            
+
             
         </form>
         {% if descriptors %}
@@ -59,12 +66,9 @@
             </tbody>            
             
         </table>
+        <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
         {% endif %}
-        
-<div id="resultArea"></div>
-
     </div>
-    
 </body>
 
 </html>
