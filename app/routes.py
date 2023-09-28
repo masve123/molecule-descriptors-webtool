@@ -8,7 +8,7 @@ from rdkit.Chem import Descriptors
 
 main = Blueprint('main', __name__)
 
-@main.route('/identify_molecule', methods=['POST'])
+@main.route('identify_molecule', methods=['POST'])
 def identify_molecule():
     smiles = request.form.get('inputField', '')
     selected_options = request.form.getlist('displayOptions')

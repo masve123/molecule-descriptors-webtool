@@ -23,7 +23,8 @@ a.title-link {
     flex-direction: column;
     align-items: center; 
     justify-content: center; 
-    height: 70vh; 
+    min-height: 70vh;
+    overflow-y: auto;
     
 }
 
@@ -112,3 +113,55 @@ input[type="submit"]:hover {
 .links a:hover {
     text-decoration: underline; /* Add underline on hover */
 }
+
+/* Science-themed table styles */
+
+table {
+    width: 75%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px; /* Slightly larger text for better readability */
+}
+
+table, th, td {
+    border: 1px solid #d0d0d0;
+}
+
+th, td {
+    padding: 10px 15px;
+    text-align: left;
+}
+
+th {
+    background-color: #e6f7ff; /* A subtle light blue color for the headers */
+    color: #333; /* Darker text for contrast */
+    font-weight: bold;
+    border-bottom: 2px solid #b0b0b0; /* A slightly thicker border at the bottom of the headers */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f5f5f5; /* A light gray for every other row */
+}
+
+
+
+/* Optional: Add a subtle striped effect for added 'scientific notebook' vibe */
+tbody tr:nth-child(odd) {
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0.02) 5%, transparent 5%, transparent 90%, rgba(0, 0, 0, 0.02) 90%);
+}
+
+.refreshButton {
+    display: inline-block;
+    background-color: #ddd;
+    color: #333;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 10px;
+}
+
+.refreshButton:hover {
+    background-color: #ccc;
+}
+
+

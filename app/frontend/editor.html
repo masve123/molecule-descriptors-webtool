@@ -4,9 +4,10 @@
 	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 	<title>Marvin JS</title>
-	<link type="text/css" rel="stylesheet" href="gui/css/editor.min.css" media="screen" />
-	<script src="gui/lib/promise-1.0.0.min.js"></script>
-	<script src="gui/gui.nocache.js"></script>
+	<link type="text/css" rel="stylesheet" href="{{ url_for('editor_resources', filename='css/editor.min.css') }}" media="screen" />
+	<script src="{{ url_for('editor_resources', filename='lib/promise-1.0.0.min.js') }}"></script>
+	<script src="{{ url_for('editor_resources', filename='gui.nocache.js') }}"></script>
+	
 	
 	<script>
 
