@@ -31,6 +31,7 @@ def identify_molecule():
     descriptors = {}
     img_str = None  # Initialize img_str here
     if molecule is not None:
+        descriptors['SMILES'] = smiles
         if 'Image' in selected_options:
             img = Draw.MolToImage(molecule)
             buffered = BytesIO()
@@ -67,14 +68,17 @@ def identify_molecule():
     return render_template('index.html', descriptors=descriptors, image=img_str)
 
 def get_atom_counts(molecule):
-    """Returns a dictionary of atom counts for the given molecule."""
-    atom_counts = OrderedDict()  
-    atom_counts["Number of atoms:"] = ""  
-    for atom in molecule.GetAtoms():
+    atom_counts = OrderedDict()
+    # Convert implicit hydrogens to explicit ones
+    mol_with_hydrogens = Chem.AddHs(molecule)
+    for atom in mol_with_hydrogens.GetAtoms():
         symbol = atom.GetSymbol()
-        atom_counts[symbol] = atom_counts.get(symbol, 0) + 1
+        key = "Number of "+symbol+" atoms"
+        atom_counts[key] = atom_counts.get(key, 0) + 1
+    
+    atom_counts["Number of atoms total:"] = sum(atom_counts.values())
+    
     return atom_counts
-
 
 
 
