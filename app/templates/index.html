@@ -26,7 +26,7 @@
             <br>
             <input type="text" id="smiles" name="inputField" placeholder="n1ccccc1" required>
             <div class="checkbox-container">
-                <label><input type="checkbox" name="displayOptions" value="Image"> Display Molecule</label>
+                <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
                 <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
                 <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
                 <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
@@ -37,6 +37,8 @@
                 <!-- Add other checkboxes here -->
             </div>
             <input type="submit" value="Get Result">
+            <input type="submit" formaction="/download_csv" value="Download CSV">
+
             
 
             

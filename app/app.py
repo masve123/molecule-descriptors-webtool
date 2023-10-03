@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, send_from_directory, render_template_string
+from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
 from rdkit import Chem
 from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem
 from collections import OrderedDict
+from io import StringIO
+import csv
 
 
 from io import BytesIO
@@ -24,12 +26,32 @@ def index():
 def identify_molecule():
     smiles = request.form.get('inputField', '')
     selected_options = request.form.getlist('displayOptions')
-    print(type(smiles))
-    print(smiles)
-    molecule = Chem.MolFromSmiles(smiles)
     
+    descriptors, img_str = compute_descriptors(smiles, selected_options)
+
+    return render_template('index.html', descriptors=descriptors, image=img_str)
+
+
+
+
+def generate_csv(data):
+    output = StringIO()
+    writer = csv.writer(output)
+
+    # Write headers
+    writer.writerow(data.keys())
+
+    # Write data
+    writer.writerow(data.values())
+
+    return output.getvalue()
+
+
+def compute_descriptors(smiles, selected_options):
+    molecule = Chem.MolFromSmiles(smiles)
     descriptors = {}
     img_str = None  # Initialize img_str here
+
     if molecule is not None:
         descriptors['SMILES'] = smiles
         if 'Image' in selected_options:
@@ -64,8 +86,9 @@ def identify_molecule():
             descriptors['FreeSASA'] = rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)
     else:
         descriptors['Error'] = "Invalid SMILES"
-    
-    return render_template('index.html', descriptors=descriptors, image=img_str)
+
+    return descriptors, img_str
+
 
 def get_atom_counts(molecule):
     atom_counts = OrderedDict()
@@ -110,6 +133,27 @@ def editor():
 @app.route('/editor/gui/<path:filename>')
 def editor_resources(filename):
     return send_from_directory('frontend/gui', filename)
+
+
+@app.route('/download_csv', methods=['POST'])
+def download_csv():
+    smiles = request.form.get('inputField', '')
+    selected_options = request.form.getlist('displayOptions')
+    
+    descriptors, _ = compute_descriptors(smiles, selected_options)  # Unpack the tuple
+    
+    # Remove the 'Image' key from the descriptors dictionary
+    descriptors.pop('Image', None)
+    
+    # Convert descriptors to CSV
+    csv_data = generate_csv(descriptors)
+    
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={"Content-disposition": "attachment; filename=data.csv"}
+    )
+
 
 if __name__ == '__main__':
     app.run(debug=True)
