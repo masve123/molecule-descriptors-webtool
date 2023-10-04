@@ -164,4 +164,48 @@ tbody tr:nth-child(odd) {
     background-color: #ccc;
 }
 
+.file-upload-label, input[type="submit"] {
+    margin: 0;
+    padding: 10px 20px;
+    line-height: 1.5;  /* Adjust accordingly */
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: top; 
+}
+
+.file-upload-label {
+    background-color: #009966;
+    color: #fff;
+    border-radius: 5px;
+}
+
+.file-upload-label:hover {
+    background-color: #007744;
+}
+
+#csvFile {
+    display: none; 
+}
+
+input[type="submit"] {
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 5px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px; /* Adjust this value to your liking */
+}
 

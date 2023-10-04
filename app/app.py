@@ -5,7 +5,6 @@ from collections import OrderedDict
 from io import StringIO
 import csv
 
-
 from io import BytesIO
 import base64
 
@@ -13,6 +12,7 @@ import base64
 
 #app = Flask(__name__)
 app = Flask(__name__, template_folder='templates', static_folder='static')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 #app = Flask(__name__, static_folder='app/frontend', static_url_path='/app/frontend')
 
 
@@ -24,16 +24,34 @@ def index():
 
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
-    smiles_input = request.form.get('inputField', '')
-    selected_options = request.form.getlist('displayOptions')  # This line was missing
-    smiles_list = [s.strip() for s in smiles_input.split(',')]
-    
+    selected_options = request.form.getlist('displayOptions')
+
+    # If the user uploads a file
+    if 'csvFile' in request.files:
+        file = request.files['csvFile']
+        if file.filename == '':
+            # No file selected
+            return render_template('index.html', error="No file selected!")
+        
+        if not file.filename.endswith('.csv'):
+            # Invalid file type
+            return render_template('index.html', error="Invalid file type! Please upload a .csv file.")
+
+        smiles_list = []
+        csv_file = csv.reader(file.stream.read().decode("utf-8").splitlines())
+        for row in csv_file:
+            smiles_list.append(row[0])
+    else:
+        smiles_input = request.form.get('inputField', '')
+        smiles_list = [s.strip() for s in smiles_input.split(',')]
+
     all_descriptors = []
     for smiles in smiles_list:
         descriptors, img_str = compute_descriptors(smiles, selected_options)
         all_descriptors.append(descriptors)
 
     return render_template('index.html', descriptors_list=all_descriptors)
+
 
 
 
@@ -140,6 +158,9 @@ def editor_resources(filename):
 
 @app.route('/download_csv', methods=['POST'])
 def download_csv():
+    # Fetching the selected options again
+    selected_options = request.form.getlist('displayOptions')
+    
     smiles_input = request.form.get('inputField', '')
     smiles_list = [s.strip() for s in smiles_input.split(',')]
     
