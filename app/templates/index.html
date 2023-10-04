@@ -43,8 +43,10 @@
 
             
         </form>
-        {% if descriptors %}
+        {% if descriptors_list %}
         <h2>Descriptors:</h2>
+        {% for descriptors in descriptors_list %}
+        <h3>SMILES: {{ descriptors['SMILES'] }}</h3>
         <table border="1">
             <thead>
                 <tr>
@@ -66,10 +68,11 @@
                 </tr>
                 {% endfor %}
             </tbody>            
-            
         </table>
+        {% endfor %}
         <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
         {% endif %}
+        
     </div>
 </body>
 

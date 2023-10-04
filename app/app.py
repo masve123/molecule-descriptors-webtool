@@ -24,13 +24,16 @@ def index():
 
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
-    smiles = request.form.get('inputField', '')
-    selected_options = request.form.getlist('displayOptions')
+    smiles_input = request.form.get('inputField', '')
+    selected_options = request.form.getlist('displayOptions')  # This line was missing
+    smiles_list = [s.strip() for s in smiles_input.split(',')]
     
-    descriptors, img_str = compute_descriptors(smiles, selected_options)
+    all_descriptors = []
+    for smiles in smiles_list:
+        descriptors, img_str = compute_descriptors(smiles, selected_options)
+        all_descriptors.append(descriptors)
 
-    return render_template('index.html', descriptors=descriptors, image=img_str)
-
+    return render_template('index.html', descriptors_list=all_descriptors)
 
 
 
@@ -137,22 +140,33 @@ def editor_resources(filename):
 
 @app.route('/download_csv', methods=['POST'])
 def download_csv():
-    smiles = request.form.get('inputField', '')
-    selected_options = request.form.getlist('displayOptions')
+    smiles_input = request.form.get('inputField', '')
+    smiles_list = [s.strip() for s in smiles_input.split(',')]
     
-    descriptors, _ = compute_descriptors(smiles, selected_options)  # Unpack the tuple
-    
-    # Remove the 'Image' key from the descriptors dictionary
-    descriptors.pop('Image', None)
-    
-    # Convert descriptors to CSV
-    csv_data = generate_csv(descriptors)
-    
+    output = StringIO()
+    writer = csv.writer(output)
+    first = True
+
+    for smiles in smiles_list:
+        descriptors, _ = compute_descriptors(smiles, selected_options)
+        descriptors.pop('Image', None)
+
+        # Write headers only for the first SMILES
+        if first:
+            writer.writerow(descriptors.keys())
+            first = False
+
+        # Write data for each SMILES
+        writer.writerow(descriptors.values())
+
+    csv_data = output.getvalue()
+
     return Response(
         csv_data,
         mimetype="text/csv",
         headers={"Content-disposition": "attachment; filename=data.csv"}
     )
+
 
 
 if __name__ == '__main__':
