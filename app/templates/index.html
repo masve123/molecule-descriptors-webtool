@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
     <title>MolDescriptor</title>
 </head>
 
@@ -22,7 +23,7 @@
     <div class="form-container">
         <h1 class="subheader">MolDescriptor</h1>
         <form action="/identify_molecule" method="post" enctype="multipart/form-data">
-            <label for="inputField">Input a molecule using the 'SMILES' format:</label>
+            
             <br>
             <input type="text" id="smiles" name="inputField" placeholder="n1ccccc1" required>
 
@@ -74,6 +75,12 @@
         {% endfor %}
         <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
         {% endif %}
+        {% if error %}
+        <div class="error-message">
+     {{ error }}
+</div>
+{% endif %}
+
         
     </div>
 </body>

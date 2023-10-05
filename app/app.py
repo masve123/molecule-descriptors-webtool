@@ -15,24 +15,20 @@ app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 #app = Flask(__name__, static_folder='app/frontend', static_url_path='/app/frontend')
 
-
 #app.register_blueprint(main)
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
     selected_options = request.form.getlist('displayOptions')
 
-    # If the user uploads a file
-    if 'csvFile' in request.files:
-        file = request.files['csvFile']
-        if file.filename == '':
-            # No file selected
-            return render_template('index.html', error="No file selected!")
-        
+    file = request.files.get('csvFile')
+    if file and file.filename != '':
+        # Process the uploaded file
         if not file.filename.endswith('.csv'):
             # Invalid file type
             return render_template('index.html', error="Invalid file type! Please upload a .csv file.")
@@ -42,8 +38,10 @@ def identify_molecule():
         for row in csv_file:
             smiles_list.append(row[0])
     else:
+        # No file uploaded, proceed with the input field
         smiles_input = request.form.get('inputField', '')
         smiles_list = [s.strip() for s in smiles_input.split(',')]
+
 
     all_descriptors = []
     for smiles in smiles_list:
@@ -187,6 +185,7 @@ def download_csv():
         mimetype="text/csv",
         headers={"Content-disposition": "attachment; filename=data.csv"}
     )
+
 
 
 

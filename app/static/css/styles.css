@@ -7,6 +7,31 @@ body, html {
     font-family: Arial, sans-serif;
 }
 
+.subheader {
+    font-weight: bold;
+    font-size: 40px;
+    background-color: #ffffff; /* white background */
+    color: #ff8c00; /* Using one color from the gradient */
+    padding: 20px 40px; /* Added spacing around the text */
+    border-radius: 10px; /* Rounded corners for the hexagonal background */
+    box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    position: relative; /* Allows us to position pseudo-elements relative to this element */
+}
+
+.subheader {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-weight: bold;
+    font-size: 42px;
+    color: #0056b3;
+    padding: 10px;
+    border: 3px solid #ff8c00;
+    display: inline-block;
+    position: relative;
+}
+
+
+
+
 a.title-link {
     text-decoration: none; 
     background: linear-gradient(45deg, #ff8c00, #ff4500); 
