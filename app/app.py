@@ -26,6 +26,9 @@ def index():
 def identify_molecule():
     selected_options = request.form.getlist('displayOptions')
 
+    # Get the checkbox state for excluding invalid SMILES
+    exclude_invalid = request.form.get('excludeInvalid') == 'true'
+
     file = request.files.get('csvFile')
     if file and file.filename != '':
         # Process the uploaded file
@@ -42,6 +45,9 @@ def identify_molecule():
         smiles_input = request.form.get('inputField', '')
         smiles_list = [s.strip() for s in smiles_input.split(',')]
 
+    # Exclude invalid SMILES if checkbox is checked
+    if exclude_invalid:
+        smiles_list = [smiles for smiles in smiles_list if Chem.MolFromSmiles(smiles) is not None]
 
     all_descriptors = []
     for smiles in smiles_list:
@@ -49,6 +55,7 @@ def identify_molecule():
         all_descriptors.append(descriptors)
 
     return render_template('index.html', descriptors_list=all_descriptors)
+
 
 
 
@@ -104,7 +111,7 @@ def compute_descriptors(smiles, selected_options):
             # 4. Compute the SASA and store in descriptors dictionary
             descriptors['FreeSASA'] = rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)
     else:
-        descriptors['Error'] = "Invalid SMILES"
+        descriptors['Error'] = f"Invalid SMILES: {smiles}"
 
     return descriptors, img_str
 
@@ -156,27 +163,52 @@ def editor_resources(filename):
 
 @app.route('/download_csv', methods=['POST'])
 def download_csv():
+    
     # Fetching the selected options again
     selected_options = request.form.getlist('displayOptions')
+
+    # Get the checkbox state for excluding invalid SMILES
+    exclude_invalid = request.form.get('excludeInvalid') == 'true'
     
     smiles_input = request.form.get('inputField', '')
     smiles_list = [s.strip() for s in smiles_input.split(',')]
+
+    # Exclude invalid SMILES if checkbox is checked
+    if exclude_invalid:
+        smiles_list = [smiles for smiles in smiles_list if Chem.MolFromSmiles(smiles) is not None]
     
     output = StringIO()
     writer = csv.writer(output)
-    first = True
 
-    for smiles in smiles_list:
-        descriptors, _ = compute_descriptors(smiles, selected_options)
-        descriptors.pop('Image', None)
+    # Get all descriptors for all molecules
+    all_descriptors = [compute_descriptors(smiles, selected_options)[0] for smiles in smiles_list]
 
-        # Write headers only for the first SMILES
-        if first:
-            writer.writerow(descriptors.keys())
-            first = False
+    # Find the complete set of descriptor keys
+    all_keys = set()
+    for desc in all_descriptors:
+        all_keys.update(desc.keys())
 
-        # Write data for each SMILES
-        writer.writerow(descriptors.values())
+    # Remove the 'Image' descriptor key if it's present and 'SMILES' key
+    all_keys.discard('Image')
+    all_keys.discard('SMILES')
+
+    # Convert set to a list to maintain order
+    all_keys = sorted(list(all_keys))
+
+    # Order the atom count columns (assuming they start with "Number of")
+    atom_columns = sorted([key for key in all_keys if key.startswith("Number of")])
+    
+    # Create the final list of columns ensuring SMILES is first and atom columns are in order
+    other_keys = [key for key in all_keys if key not in atom_columns and key != 'Error']
+    ordered_keys = ['SMILES'] + atom_columns + other_keys + (['Error'] if 'Error' in all_keys else [])
+
+
+    # Write the headers
+    writer.writerow(ordered_keys)
+
+    # Write data for each molecule
+    for desc in all_descriptors:
+        writer.writerow([desc.get(key, '') for key in ordered_keys])
 
     csv_data = output.getvalue()
 
@@ -185,9 +217,6 @@ def download_csv():
         mimetype="text/csv",
         headers={"Content-disposition": "attachment; filename=data.csv"}
     )
-
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
