@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
-from rdkit import Chem
+from rdkit import Chem, rdBase
 from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem
 from collections import OrderedDict
 from io import StringIO
@@ -182,6 +182,9 @@ def download_csv():
     output = StringIO()
     writer = csv.writer(output)
 
+    # Get the RDKit version
+    rdkit_version = rdBase.rdkitVersion
+
     # Get all descriptors for all molecules
     all_descriptors = [compute_descriptors(smiles, selected_options)[0] for smiles in smiles_list]
 
@@ -217,7 +220,7 @@ def download_csv():
     return Response(
         csv_data,
         mimetype="text/csv",
-        headers={"Content-disposition": "attachment; filename=data.csv"}
+        headers={"Content-disposition": f"attachment; filename=data_RDKit_{rdkit_version}.csv"}
     )
 
 if __name__ == '__main__':
