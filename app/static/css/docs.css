@@ -21,10 +21,11 @@ a.title-link {
 
 .toc {
     background-color: #fff;
-    width: 250px;
+    width: 500px;  /* Adjust this value to your desired width */
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
 }
+
 
 .toc h2 {
     font-size: 1.2rem;
@@ -92,4 +93,40 @@ p {
 
 .links a:hover {
     text-decoration: underline; 
+}
+
+h2 {
+    font-size: 18px;  
+}
+
+.content h2 {
+    font-size: 18px;
+}
+
+/* Increase space between main sections */
+.toc > ul > li {
+    margin-bottom: 1em;
+}
+
+/* Indent and adjust font size of subsections */
+.toc > ul > li > ul {
+    margin-left: 1em;
+    font-size: 0.9em;
+}
+
+/* Bullet points for subsections */
+.toc li > ul > li::before {
+    content: "•"; /* Bullet point */
+    display: inline-block;
+    margin-right: 5px;
+}
+
+/* Indentation for subsections */
+.toc li > ul {
+    margin-left: 15px;
+}
+
+/* Adjust font size of subsections */
+.toc li > ul > li > a {
+    font-size: 0.85em;
 }

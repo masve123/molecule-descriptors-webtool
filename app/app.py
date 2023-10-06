@@ -17,6 +17,8 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 
 #app.register_blueprint(main)
 
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
