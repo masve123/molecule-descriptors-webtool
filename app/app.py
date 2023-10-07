@@ -45,7 +45,7 @@ def identify_molecule():
     else:
         # No file uploaded, proceed with the input field
         smiles_input = request.form.get('inputField', '')
-        smiles_list = [s.strip() for s in smiles_input.split(',')]
+        smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
 
     # Exclude invalid SMILES if checkbox is checked
     if exclude_invalid:
