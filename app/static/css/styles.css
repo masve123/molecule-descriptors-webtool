@@ -148,3 +148,75 @@ input[type="submit"], .file-upload-label {
 input[type="submit"]:hover, .file-upload-label:hover {
     opacity: 0.8;
 }
+
+
+
+
+/* For about page */
+
+.content {
+    max-width: 800px; /* You can adjust this */
+    margin: 40px auto;
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+.content h1, .content h2, .content h3 {
+    margin-top: 24px;
+    margin-bottom: 16px;
+}
+
+.content h1 {
+    font-size: 28px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.content h2 {
+    font-size: 24px;
+}
+
+.content h3 {
+    font-size: 20px;
+}
+
+.content p {
+    margin: 20px 0;
+}
+
+.content ul, .content ol {
+    margin: 20px;
+    padding-left: 40px;
+}
+
+.content li {
+    margin: 8px 0;
+}
+
+.content a {
+    color: #007bff; /* typical markdown link color */
+    text-decoration: none;
+}
+
+.content a:hover {
+    text-decoration: underline;
+}
+
+.content code {
+    background-color: #f4f4f4;
+    padding: 2px 5px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.content pre {
+    background-color: #f4f4f4;
+    padding: 10px;
+    overflow-x: auto; /* for long lines of code */
+}
+
+.content blockquote {
+    border-left: 4px solid #e0e0e0;
+    padding: 0 20px;
+    color: #777;
+}
