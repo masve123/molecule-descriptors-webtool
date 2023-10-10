@@ -33,12 +33,16 @@
             </div>
 
 
-            <div class="tab-contents"> <!-- Wrapping the contents in a new div -->
+            <div class="tab-contents">
                 <!-- RDKit Chem Tab Content -->
+                <div class="special-checkbox">
+                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES from result</label>
+                    <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
+                </div>
+                
                 <div id="rdkit-chem" class="tab-content">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES</label>
-                        <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
+                        
                         <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
                         <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
                         <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
@@ -49,12 +53,11 @@
 
                 </div>
                 
-                <!-- RDKit Other Tab Content (just a placeholder for demonstration purposes) -->
+                <!-- RDKit Other Tab Content -->
                 <div id="rdkit-other" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES</label>
-                        <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
-                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
+                        <label><input type="checkbox" name="displayOptions" value="Image"> Test</label>
+                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Test</label>
                     </div>
                 </div>
             </div>

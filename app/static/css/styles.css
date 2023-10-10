@@ -220,3 +220,17 @@ input[type="submit"]:hover, .file-upload-label:hover {
     padding: 0 20px;
     color: #777;
 }
+
+.special-checkbox {
+    margin: 20px 0;
+}
+
+.special-checkbox label {
+    background-color: #e7e7e7;
+    padding: 5px 10px;
+    border-radius: 4px; /* Rounded corners */
+}
+
+.special-checkbox input[type="checkbox"] {
+    margin-right: 10px; /* Spacing between checkbox and its label */
+}
