@@ -57,12 +57,105 @@
                     </code>
                 </p>
                 <h2 id="subsection1-2">Calculating molecular data from uploading a CSV</h2>
+                <b>Format of uploaded CSV</b>
                 <p>
-                    ...
+                    The CSV to be uploaded should contain one column of SMILES.
+                </p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Exapmple of a CSV in table format</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>C</td>
+                            </tr>
+                            <tr>
+                                <td>O=C=O</td>
+                            </tr>
+                            <tr>
+                                <td>CCO</td>
+                            </tr>
+                            <tr>
+                                <td>C1CCCCC1</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                <p>
+                    Calculating molecular data from a CSV file is done by first selecting the descriptors one wants to calculate, then clicking the "Upload CSV" button. This will automatically calculate the contents of the CSV provided it is in the correct format.
                 </p>
                 <h2 id="subsection1-3">Downloading the results as a CSV</h2>
                 <p>
-                    ...
+                    Ater providing the input field with one or many smiles, the user can select the descriptors to be calculated. Pressing the "Download CSV" button will download a CSV file containing the SMILES and the selected descriptors.
+                </p>
+                <p>
+                    When the user inputs the following molecules and select the checkboxes for Number of Atoms, Molecular Weight, Polar Surface Area, and clogP, the system will produce the following CSV:
+                </p>
+                
+                <p>
+                    <code>
+                        Input: CCN(C)C(=O)C, c1ccccc1Cl, C1COCCO1
+                    </code>
+                </p>
+                <p>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>SMILES</th>
+                                <th>Number of C atoms</th>
+                                <th>Number of Cl atoms</th>
+                                <th>Number of H atoms</th>
+                                <th>Number of N atoms</th>
+                                <th>Number of O atoms</th>
+                                <th>Number of atoms total:</th>
+                                <th>MolecularWeight</th>
+                                <th>PSA</th>
+                                <th>clogP</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>CCN(C)C(=O)C</td>
+                                <td>5</td>
+                                <td></td>
+                                <td>11</td>
+                                <td>1</td>
+                                <td>1</td>
+                                <td>18</td>
+                                <td>101.084063972</td>
+                                <td>20.310000000000002</td>
+                                <td>0.48460000000000003</td>
+                            </tr>
+                            <tr>
+                                <td>c1ccccc1Cl</td>
+                                <td>6</td>
+                                <td>1</td>
+                                <td>5</td>
+                                <td></td>
+                                <td></td>
+                                <td>12</td>
+                                <td>112.00797784</td>
+                                <td>0.0</td>
+                                <td>2.34</td>
+                            </tr>
+                            <tr>
+                                <td>C1COCCO1</td>
+                                <td>4</td>
+                                <td></td>
+                                <td>8</td>
+                                <td></td>
+                                <td>2</td>
+                                <td>14</td>
+                                <td>88.052429496</td>
+                                <td>18.46</td>
+                                <td>0.03320000000000001</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </p>
+                <p>
+                    The name of the downloaded CSV will contain the name of the current RDKit version: <code>data_RDKit_[current-version].csv</code> 
                 </p>
             </section>
             
@@ -81,5 +174,17 @@
             </section>
         </main>
     </div>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 50px 0;
+            text-align: left;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+    </style>
 </body>
 </html>
