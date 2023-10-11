@@ -234,3 +234,9 @@ input[type="submit"]:hover, .file-upload-label:hover {
 .special-checkbox input[type="checkbox"] {
     margin-right: 10px; /* Spacing between checkbox and its label */
 }
+
+.rdkit-badge {
+    display: grid;
+    place-items: center; 
+    height: 5%;
+}
