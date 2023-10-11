@@ -56,6 +56,10 @@
                         n1ccccc1, CN1C=NC2=C1C(=O)N(C(=O)N2C)C, CC(CCOC(=O)CC(C)O)O
                     </code>
                 </p>
+                <b>Error handling</b>
+                <p>
+                    When you select the "Exclude Invalid SMILES from result" option, any invalid SMILES entries will be excluded from the displayed table on the website. If you do not select this option and an invalid SMILES is inputted, the table will show an "Error" row indicating the invalid SMILES.
+                </p>
                 <h2 id="subsection1-2">Calculating molecular data from uploading a CSV</h2>
                 <b>Format of uploaded CSV</b>
                 <p>
@@ -156,6 +160,10 @@
                 </p>
                 <p>
                     The name of the downloaded CSV will contain the name of the current RDKit version: <code>data_RDKit_[current-version].csv</code> 
+                </p>
+                <b>Error handling</b>
+                <p>
+                    By selecting the "Exclude Invalid SMILES from result" option, any invalid SMILES will be omitted from the CSV output. If this option is not selected, a new column named "Error" will be added to the CSV to highlight the invalid SMILES entries.
                 </p>
             </section>
             
