@@ -33,10 +33,22 @@
                             <ul>
                                 <li><a href="#molecular-weight">Molecular Weight</a></li>
                             </ul>
-                        </li>
-                        <li><a href="#subsection2-2">RDkit ...</a>
                             <ul>
-                                <li><a href="#... desc">Molecular Weight</a></li>
+                                <li><a href="#PSA">Polar Surface Area (PSA)</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="#QED">QED (Quantitative Estimation of Drug-likeness)</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="#numAtoms">Number of Atoms</a></li>
+                            </ul>
+                            <ul>
+                                <li><a href="#SASA">Solvent Accessible Surface Area (SASA)</a></li>
+                            </ul>
+                        </li>
+                        <li><a href="#subsection2-2">RDkit Crippen</a>
+                            <ul>
+                                <li><a href="#clogP">clogP</a></li>
                             </ul>
                         </li>
                     </ul>
@@ -181,10 +193,43 @@
                 <h1>Descriptors</h1>
                 <h2 id="subsection2-1">RDkit Chem</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis knostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                <h3 id="molecular-weight">Molecular Weight</h3>
-                <p>Content related to molecular weight...</p>
-                <h2 id="subsection2-2">RDkit ...</h2>
+                    <h3 id="molecular-weight">Molecular Weight</h3>
+                    <p>
+                        The exact molecular weight of a molecule is calculated from the atomic weights of individual atoms. It represents the sum of the atomic weights of the constituent atoms in the molecule.
+                    </p>
+                    <code>RDKit Function: Descriptors.ExactMolWt(molecule)</code>
+                    <h3 id="PSA">Polar Surface Area (PSA)</h3>
+                    <p>
+                        The topological polar surface area is a sum over all polar atoms, primarily oxygen and nitrogen, also including their attached hydrogens. It can be used as a measure of drug transport properties.
+                    </p>
+                    <code>RDKit Function: Descriptors.TPSA(molecule)</code>
+                    <h3 id="QED">QED (Quantitative Estimation of Drug-likeness)</h3>
+                    <p>
+                        The Quantitative Estimate of Drug-likeness (QED) is a measure designed to reflect how "drug-like" a compound is in terms of physicochemical properties. A QED score closer to 1 typically indicates a more drug-like compound.
+                    </p>
+                    <code>RDKit Function: QED.qed(molecule)</code>
+                    <h3 id="numAtoms">Number of Atoms</h3>
+                    <p>
+                        This provides the total count of atoms in a molecule, which can be useful for understanding the size and complexity of the molecule.
+                    </p>
+                    <code>RDKit Function: molecule.GetNumAtoms()</code>
+                    <h3 id="SASA">Solvent Accessible Surface Area (SASA)</h3>
+                    <p>
+                        The Solvent Accessible Surface Area (SASA) is a measure of the surface area of a biomolecule that is accessible to a solvent. It's important in understanding interactions like protein-ligand binding.
+                    </p>
+                    <p>Calculating Solvent Accessible Surface Area</p>
+                    <ol>
+                        <li><p>Generate 3D coordinates for the molecule using <code>AllChem.EmbedMolecule(molecule, AllChem.ETKDG())</code></p></li>
+                        <li><p>Classify atoms and get radii with <code>rdFreeSASA.classifyAtoms(molecule)</code></p></li>
+                        <li><p>Use <code>rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)</code> with the appropriate SASA options.</p></li>
+                    </ol>
+                <h2 id="subsection2-2">RDkit Crippen</h2>
                 <p>Another paragraph about a different aspect of using MolDescriptor...</p>
+                    <h3 id="clogP">clogP</h3>
+                    <p>
+                        The calculated logarithm of the partition coefficient between n-octanol and water (clogP). It's a measure of the hydrophobicity of the molecule and plays an important role in ADME predictions.
+                    </p>
+                    <code>RDKit Function: Crippen.MolLogP(molecule)</code>
             </section>
 
             <section id="section3">

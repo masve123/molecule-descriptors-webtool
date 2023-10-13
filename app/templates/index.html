@@ -29,7 +29,7 @@
             <!-- Tabs navigation -->
             <div class="tabs">
                 <div class="tab active" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
-                <div class="tab" onclick="showTab(event, 'rdkit-other')">RDKit Other</div>                
+                <div class="tab" onclick="showTab(event, 'rdkit-crippen')">RDKit Crippen</div>                
             </div>
 
 
@@ -42,10 +42,8 @@
                 
                 <div id="rdkit-chem" class="tab-content">
                     <div class="checkbox-container">
-                        
                         <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
-                        <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
-                        <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
+                        <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>                    
                         <label><input type="checkbox" name="displayOptions" value="QED"> QED</label>
                         <label><input type="checkbox" name="displayOptions" value="numberOfAtoms"> Number of Atoms</label>
                         <label><input type="checkbox" name="displayOptions" value="FreeSASA"> Solvent Accessible Surface Area</label>
@@ -54,10 +52,9 @@
                 </div>
                 
                 <!-- RDKit Other Tab Content -->
-                <div id="rdkit-other" class="tab-content" style="display: none;">
+                <div id="rdkit-crippen" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="Image"> Test</label>
-                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Test</label>
+                        <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
                     </div>
                 </div>
             </div>
