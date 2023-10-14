@@ -47,10 +47,18 @@ body, html {
 
 .subheader {
     color: #333;
-    font-size: 24px;
+    font-size: 34px;
     font-weight: bold;
     margin: 10px 0;
-    text-align: center;
+    text-align: center;    
+}
+
+.mol {
+    color: #FF8A00;  /* This is an orange color, similar to the one in the image */
+}
+
+.descriptor {
+    color: #333;  /* This is a red color, similar to the one in the image */
 }
 
 input[type="text"] {
