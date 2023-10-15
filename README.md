@@ -1,5 +1,5 @@
 # molecule-descriptors-webtool
-A simple, user-friendly website where users can input molecules (in a SMILES string) and use RDkit, an open source Python package, to calculate various descriptors.
+A simple, user-friendly website where users can input molecules (in a SMILES string) and use RDkit, an open source Python package, to calculate various descriptors. The descriptors are then displayed in a table on the website. The result can also be downloaded as a CSV file.
 
 ## Oppdateres etter hvert
 - For å hente nyeste versjon kjøres ```git pull``` i terminalen
