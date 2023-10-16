@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
 from rdkit import Chem, rdBase
-from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem
+from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski
 from collections import OrderedDict
 from io import StringIO
 import csv
@@ -100,6 +100,12 @@ def compute_descriptors(smiles, selected_options):
             atom_counts = get_atom_counts(molecule)
             descriptors.update(atom_counts)
                 #descriptors['numberOfAtoms'] = molecule.GetNumAtoms()
+        if 'NumHDonors' in selected_options:
+            descriptors['NumHDonors'] = Lipinski.NumHDonors(molecule)
+        if 'NumHAcceptors' in selected_options:
+            descriptors['NumHAcceptors'] = Lipinski.NumHAcceptors(molecule)
+        if 'NumRotatableBonds' in selected_options:
+            descriptors['NumRotatableBonds'] = Lipinski.NumRotatableBonds(molecule)
         if 'FreeSASA' in selected_options:
             # 1. Generate 3D coordinates for the molecule
             AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
