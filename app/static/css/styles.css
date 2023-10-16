@@ -54,11 +54,11 @@ body, html {
 }
 
 .mol {
-    color: #FF8A00;  /* This is an orange color, similar to the one in the image */
+    color: #FF8A00;
 }
 
 .descriptor {
-    color: #333;  /* This is a red color, similar to the one in the image */
+    color: #333;
 }
 
 input[type="text"] {
@@ -72,6 +72,17 @@ input[type="text"] {
 .tabs {
     border-bottom: 1px solid #e0e0e0;
     margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.tab-list {
+    padding: 0;
+    list-style: none;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
 }
 
 .tab {
@@ -79,11 +90,20 @@ input[type="text"] {
     cursor: pointer;
     margin-right: 5px;
     color: #777;
+    flex: 1;
+    text-align: center;
+    border: 1px solid transparent; 
+    transition: color 0.3s, border-color 0.3s;
+}
+
+.tab:hover {
+    color: #555;
 }
 
 .tab.active {
     color: #333;
     font-weight: bold;
+    border-bottom-color: #ffa500;
     border-bottom: 3px solid #ffa500;
 }
 
@@ -158,12 +178,10 @@ input[type="submit"]:hover, .file-upload-label:hover {
 }
 
 
-
-
 /* For about page */
 
 .content {
-    max-width: 800px; /* You can adjust this */
+    max-width: 800px; 
     margin: 40px auto;
     padding: 0 20px;
     font-family: Arial, sans-serif;
@@ -203,7 +221,7 @@ input[type="submit"]:hover, .file-upload-label:hover {
 }
 
 .content a {
-    color: #007bff; /* typical markdown link color */
+    color: #007bff; /* markdown link color */
     text-decoration: none;
 }
 
@@ -220,7 +238,7 @@ input[type="submit"]:hover, .file-upload-label:hover {
 .content pre {
     background-color: #f4f4f4;
     padding: 10px;
-    overflow-x: auto; /* for long lines of code */
+    overflow-x: auto;
 }
 
 .content blockquote {
@@ -236,11 +254,11 @@ input[type="submit"]:hover, .file-upload-label:hover {
 .special-checkbox label {
     background-color: #e7e7e7;
     padding: 5px 10px;
-    border-radius: 4px; /* Rounded corners */
+    border-radius: 4px;
 }
 
 .special-checkbox input[type="checkbox"] {
-    margin-right: 10px; /* Spacing between checkbox and its label */
+    margin-right: 10px;
 }
 
 .rdkit-badge {
