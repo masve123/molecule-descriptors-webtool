@@ -101,11 +101,11 @@ def compute_descriptors(smiles, selected_options):
             descriptors.update(atom_counts)
                 #descriptors['numberOfAtoms'] = molecule.GetNumAtoms()
         if 'NumHDonors' in selected_options:
-            descriptors['NumHDonors'] = Lipinski.NumHDonors(molecule)
+            descriptors['Number of H Donors'] = Lipinski.NumHDonors(molecule)
         if 'NumHAcceptors' in selected_options:
-            descriptors['NumHAcceptors'] = Lipinski.NumHAcceptors(molecule)
+            descriptors['Number of H Acceptors'] = Lipinski.NumHAcceptors(molecule)
         if 'NumRotatableBonds' in selected_options:
-            descriptors['NumRotatableBonds'] = Lipinski.NumRotatableBonds(molecule)
+            descriptors['Number of Rotatable Bonds'] = Lipinski.NumRotatableBonds(molecule)
         if 'FreeSASA' in selected_options:
             # 1. Generate 3D coordinates for the molecule
             AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
