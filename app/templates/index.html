@@ -34,7 +34,8 @@
                     <div class="tab" onclick="showTab(event, 'rdkit-crippen')">RDKit Crippen</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>   
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>       
+                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div> 
+                    <div class="tab" onclick="showTab(event, 'search-tab')">Search</div>      
                 </ul>
             </div>
 
@@ -85,6 +86,10 @@
                     <div class="checkbox-container">
                     </div>
                 </div>
+                <div id="search-tab" class="tab-content" style="display: none;">
+                    <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
+                    <div id="searchResults" class="checkbox-container"></div>
+                </div>                
             </div>
             <div class="button-group">
                 <input type="submit" value="Get Result">
