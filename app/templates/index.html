@@ -155,9 +155,18 @@
                 tabs[i].classList.remove('active');
             }
 
-            // Show selected tab content and activate the tab
             document.getElementById(tabId).style.display = 'block';
             event.target.classList.add('active');
+
+            if (tabId !== 'search-tab') {
+                var searchCheckboxes = document.querySelectorAll('#searchResults input[type="checkbox"]');
+                searchCheckboxes.forEach(function(sCheckbox) {
+                var mainCheckbox = document.querySelector('.checkbox-container label input[value="' + sCheckbox.value + '"]');
+            if (mainCheckbox) {
+                mainCheckbox.checked = sCheckbox.checked;
+            }
+        });
+    }
         }
         
         document.getElementById('csvFile').addEventListener('change', function() {
@@ -165,6 +174,40 @@
                 this.form.submit();
             }
         });
+
+        function filterDescriptors() {
+            var input = document.getElementById('searchBar');
+            var filter = input.value.toLowerCase();
+            var labels = document.querySelectorAll('.checkbox-container label');
+            var searchResults = document.getElementById('searchResults');
+            searchResults.innerHTML = ''; // clear previous search results
+
+            if (!filter) return; 
+
+            for (var i = 0; i < labels.length; i++) {
+                var label = labels[i];
+                var labelText = label.textContent || label.innerText;
+
+                if (labelText.toLowerCase().indexOf(filter) > -1) {
+                    // Check if the descriptor already exists in the search results
+                    var existingDescriptor = searchResults.querySelector('label input[value="' + label.querySelector('input').value + '"]');
+                    if (existingDescriptor) continue; // Skip
+
+                    var clonedLabel = label.cloneNode(true);
+                    clonedLabel.querySelector('input').addEventListener('change', function(e) {        
+                        var checkbox = document.querySelector('.checkbox-container label input[value="' + e.target.value + '"]');
+                        checkbox.checked = e.target.checked;
+                    });
+                    clonedLabel.querySelector('input').addEventListener('change', function() {
+                        document.getElementById('searchBar').value = ''; // Clear the search field
+                    });
+
+                    searchResults.appendChild(clonedLabel);
+                }
+            }
+        }
+
+
     </script>
     
 </body>    
