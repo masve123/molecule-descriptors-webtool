@@ -4,6 +4,7 @@ from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lip
 from collections import OrderedDict
 from io import StringIO
 import csv
+from rdkit.Chem.AtomPairs import Pairs, Sheridan, Torsions, Utils
 
 from io import BytesIO
 import base64
@@ -106,6 +107,14 @@ def compute_descriptors(smiles, selected_options):
             descriptors['Number of H Acceptors'] = Lipinski.NumHAcceptors(molecule)
         if 'NumRotatableBonds' in selected_options:
             descriptors['Number of Rotatable Bonds'] = Lipinski.NumRotatableBonds(molecule)
+
+        # rdkit.Chem.AtomPairs.Sheridan module
+        if 'AssignPattyTypes' in selected_options:
+            descriptors['AssignPattyTypes'] = Sheridan.AssignPattyTypes(molecule)
+
+        # rdkit.Chem.AtomPairs.Torsions module
+        if 'GetTopologicalTorsionFingerprintAsIds' in selected_options:
+            descriptors['GetTopologicalTorsionFingerprintAsIds'] = Torsions.GetTopologicalTorsionFingerprintAsIds(molecule)
         if 'FreeSASA' in selected_options:
             # 1. Generate 3D coordinates for the molecule
             AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
