@@ -4,6 +4,8 @@ from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lip
 from collections import OrderedDict
 from io import StringIO
 import csv
+import tempfile
+import subprocess
 
 from io import BytesIO
 import base64
@@ -46,6 +48,8 @@ def identify_molecule():
         # No file uploaded, proceed with the input field
         smiles_input = request.form.get('inputField', '')
         smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
+        
+
 
     # Exclude invalid SMILES if checkbox is checked
     if exclude_invalid:
