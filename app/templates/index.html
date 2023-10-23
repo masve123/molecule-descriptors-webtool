@@ -17,52 +17,67 @@
         <div class="links">
             <a href="{{ url_for('draw') }}" class="draw-link">DRAW</a>
             <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
-            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>            
+            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
         </div>
     </div>
 
     <div class="form-container">
         <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
-        <form action="/identify_molecule" method="post" enctype="multipart/form-data">
-            <input type="text" id="smiles" name="inputField" placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
+
+        <form action="/identify_molecule" method="post" enctype="multipart/form-data"
+            onsubmit="populateSelectedMethods();">
+            <input type="hidden" id="selectedMethodsInput" name="selectedMethods">
+            <input type="text" id="smiles" name="inputField"
+                placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
             <br>
-            <!-- Tabs navigation -->
+            <div class="method-search-container">
+                <input type="text" id="methodSearch" placeholder="Search RDKit Methods" oninput="searchMethods()">
+                <div id="dropdownContainer"></div>
+                <div id="selectedMethodsBox"></div>
+            </div>
+            <!-- Tabs navigation
             <div class="tabs">
                 <ul class="tab-list">
                     <div class="tab active" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">RDKit Lipinski</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-crippen')">RDKit Crippen</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>   
+                    <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>       
+                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>
                 </ul>
             </div>
 
-
+        -->
             <div class="tab-contents">
-                <!-- RDKit Chem Tab Content -->
+
                 <div class="special-checkbox">
-                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES from result</label>
+                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES
+                        from result</label>
                     <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
                 </div>
-                
+                <!--
                 <div id="rdkit-chem" class="tab-content">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
+                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular
+                            Weight</label>
                         <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
-                        <label><input type="checkbox" name="displayOptions" value="numberOfAtoms"> Number of Atoms</label>
+                        <label><input type="checkbox" name="displayOptions" value="numberOfAtoms"> Number of
+                            Atoms</label>
                     </div>
                 </div>
+
                 
-                <!-- RDKit Other Tab Content -->
                 <div id="rdkit-Lipinski" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="NumHDonors"> Number of H-Bond Donors</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumHAcceptors"> Number of H-Bond Acceptors</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumRotatableBonds"> Number of Rotatable Bonds</label>
+                        <label><input type="checkbox" name="displayOptions" value="NumHDonors"> Number of H-Bond
+                            Donors</label>
+                        <label><input type="checkbox" name="displayOptions" value="NumHAcceptors"> Number of H-Bond
+                            Acceptors</label>
+                        <label><input type="checkbox" name="displayOptions" value="NumRotatableBonds"> Number of
+                            Rotatable Bonds</label>
                     </div>
                 </div>
-                
+
                 <div id="rdkit-crippen" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
@@ -77,7 +92,8 @@
 
                 <div id="rdkit-rdFreeSASA" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="FreeSASA"> Solvent Accessible Surface Area</label>
+                        <label><input type="checkbox" name="displayOptions" value="FreeSASA"> Solvent Accessible Surface
+                            Area</label>
                     </div>
                 </div>
 
@@ -86,15 +102,16 @@
                     </div>
                 </div>
             </div>
-            <div class="button-group">
-                <input type="submit" value="Get Result">
-                <input type="submit" formaction="/download_csv" value="Download CSV">
-                <label for="csvFile" class="file-upload-label">Upload a CSV</label>
-                <input type="file" id="csvFile" name="csvFile" accept=".csv">
-            </div>
-            
+        --->
+                <div class="button-group">
+                    <input type="submit" value="Get Result">
+                    <input type="submit" formaction="/download_csv" value="Download CSV">
+                    <label for="csvFile" class="file-upload-label">Upload a CSV</label>
+                    <input type="file" id="csvFile" name="csvFile" accept=".csv">
+                </div>
+
         </form>
-        
+
         {% if descriptors_list %}
         <h2>Descriptors:</h2>
         {% for descriptors in descriptors_list %}
@@ -112,31 +129,76 @@
                     <td>{{ key }}</td>
                     <td>
                         {% if key == "Image" %}
-                        <img src="data:image/png;base64,{{ value }}" alt="Molecule Image" width="200"> <!-- Adjust width as needed -->
+                        <img src="data:image/png;base64,{{ value }}" alt="Molecule Image" width="200">
+                        <!-- Adjust width as needed -->
                         {% else %}
                         {{ value }}
                         {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
-            </tbody>            
+            </tbody>
         </table>
         {% endfor %}
         <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
         {% endif %}
         {% if error %}
         <div class="error-message">
-     {{ error }}
-</div>
-{% endif %}
+            {{ error }}
+        </div>
+        {% endif %}
 
-        
+
     </div>
     <div class="rdkit-badge">
-        <a href="https://www.rdkit.org/"><img alt="Powered by RDKit" src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"></a>
+        <a href="https://www.rdkit.org/"><img alt="Powered by RDKit"
+                src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"></a>
     </div>
 
     <script>
+        let selectedMethods = [];
+
+        async function searchMethods() {
+            const query = document.getElementById('methodSearch').value.toLowerCase();
+            const res = await fetch('/api/methods');
+            const methods = await res.json();
+
+            let filteredMethods = [];
+            for (const [module, methodList] of Object.entries(methods)) {
+                for (const method of methodList) {
+                    if (method.toLowerCase().includes(query)) {
+                        filteredMethods.push(`${module}.${method}`);
+                    }
+                }
+            }
+
+            let dropdown = document.getElementById('dropdownContainer');
+            dropdown.innerHTML = '';
+
+            filteredMethods.forEach((method) => {
+                let methodElement = document.createElement('div');
+                methodElement.textContent = method;
+                methodElement.className = 'clickable-method';
+
+                methodElement.addEventListener('click', () => {
+                    addMethod(method);
+                });
+
+                dropdown.appendChild(methodElement);
+            });
+        }
+
+        function addMethod(method) {
+            selectedMethods.push(method);
+
+            let selectedMethodsBox = document.getElementById('selectedMethodsBox');
+            let methodElement = document.createElement('div');
+            methodElement.textContent = method;
+            methodElement.className = 'selected-method';
+
+            selectedMethodsBox.appendChild(methodElement);
+        }
+
         function showTab(event, tabId) {
             // Hide all tab contents
             var contents = document.querySelectorAll(".tab-content");
@@ -154,14 +216,29 @@
             document.getElementById(tabId).style.display = 'block';
             event.target.classList.add('active');
         }
-        
-        document.getElementById('csvFile').addEventListener('change', function() {
+
+        document.getElementById('csvFile').addEventListener('change', function () {
             if (this.value) {
                 this.form.submit();
             }
         });
+
+        document.addEventListener('click', function (event) {
+            let dropdown = document.getElementById('dropdownContainer');
+            if (!dropdown.contains(event.target)) {
+                dropdown.innerHTML = '';
+            }
+        });
+
+        function populateSelectedMethods() {
+            const selectedMethodsInput = document.getElementById('selectedMethodsInput');
+            selectedMethodsInput.value = JSON.stringify(selectedMethods);
+        }
+
+
     </script>
-    
-</body>    
+
+
+</body>
 
 </html>

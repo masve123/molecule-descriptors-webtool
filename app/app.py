@@ -1,23 +1,18 @@
+import json
 from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
+import rdkit
 from rdkit import Chem, rdBase
 from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski
 from collections import OrderedDict
 from io import StringIO
 import csv
-import tempfile
-import subprocess
-
 from io import BytesIO
 import base64
+from flask import jsonify
 
-#from app.routes import main  # Replace 'your_folder_name' with the actual folder name where routes.py is located
-
-#app = Flask(__name__)
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
-#app = Flask(__name__, static_folder='app/frontend', static_url_path='/app/frontend')
 
-#app.register_blueprint(main)
 
 
 
@@ -28,7 +23,15 @@ def index():
 
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
-    selected_options = request.form.getlist('displayOptions')
+    #selected_options = request.form.getlist('displayOptions')
+    selected_methods_json = request.form.get('selectedMethods')
+    
+    if selected_methods_json is None:
+        print("Error: 'selectedMethods' not received by server.")
+        # Handle the error as appropriate for your application
+        return "An error occurred"
+    
+    selected_methods = json.loads(selected_methods_json)
 
     # Get the checkbox state for excluding invalid SMILES
     exclude_invalid = request.form.get('excludeInvalid') == 'true'
@@ -51,19 +54,50 @@ def identify_molecule():
         
 
 
-    # Exclude invalid SMILES if checkbox is checked
-    if exclude_invalid:
-        smiles_list = [smiles for smiles in smiles_list if Chem.MolFromSmiles(smiles) is not None]
+    selected_options = request.form.getlist('displayOptions')
 
     all_descriptors = []
     for smiles in smiles_list:
-        descriptors, img_str = compute_descriptors(smiles, selected_options)
+        descriptors = {}
+        
+        molecule = Chem.MolFromSmiles(smiles)
+        if molecule:
+            # Check if 'Image' was selected and add to the descriptors dictionary
+            if 'Image' in selected_options:
+                img_str = draw_to_html(smiles, selected_options)
+                if img_str:
+                    descriptors['Image'] = img_str
+
+            for method in selected_methods:
+                module_name, method_name = method.split('.')
+                module = getattr(rdkit.Chem, module_name, None)
+                if module:
+                    func = getattr(module, method_name, None)
+                    if func:
+                        descriptors[method_name] = func(molecule)
+        else:
+            if exclude_invalid:
+                continue
+            descriptors['Error'] = 'Invalid Molecule'
+        
         all_descriptors.append(descriptors)
 
     return render_template('index.html', descriptors_list=all_descriptors)
 
 
+def get_all_methods(*modules):
+    all_methods = {}
+    for module in modules:
+        method_names = [attr for attr in dir(module) if callable(getattr(module, attr)) and not attr.startswith("__")]
+        all_methods[module.__name__.split('.')[-1]] = method_names
+    return all_methods
 
+rdkit_methods = get_all_methods(Chem, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski, Draw)
+
+
+@app.route('/api/methods', methods=['GET'])
+def get_methods():
+    return jsonify(rdkit_methods)
 
 
 def generate_csv(data):
@@ -79,7 +113,7 @@ def generate_csv(data):
     return output.getvalue()
 
 
-def compute_descriptors(smiles, selected_options):
+def draw_to_html(smiles, selected_options):
     molecule = Chem.MolFromSmiles(smiles)
     descriptors = {}
     img_str = None  # Initialize img_str here
@@ -92,41 +126,10 @@ def compute_descriptors(smiles, selected_options):
             img.save(buffered, format="PNG")
             img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
             descriptors['Image'] = img_str
-        if 'MolecularWeight' in selected_options:
-            descriptors['MolecularWeight'] = Descriptors.ExactMolWt(molecule)
-        if 'PSA' in selected_options:
-            descriptors['PSA'] = Descriptors.TPSA(molecule)
-        if 'clogP' in selected_options:
-            descriptors['clogP'] = Crippen.MolLogP(molecule)
-        if 'QED' in selected_options:
-            descriptors['QED'] = QED.qed(molecule)
-        if 'numberOfAtoms' in selected_options:
-            atom_counts = get_atom_counts(molecule)
-            descriptors.update(atom_counts)
-                #descriptors['numberOfAtoms'] = molecule.GetNumAtoms()
-        if 'NumHDonors' in selected_options:
-            descriptors['Number of H Donors'] = Lipinski.NumHDonors(molecule)
-        if 'NumHAcceptors' in selected_options:
-            descriptors['Number of H Acceptors'] = Lipinski.NumHAcceptors(molecule)
-        if 'NumRotatableBonds' in selected_options:
-            descriptors['Number of Rotatable Bonds'] = Lipinski.NumRotatableBonds(molecule)
-        if 'FreeSASA' in selected_options:
-            # 1. Generate 3D coordinates for the molecule
-            AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
-
-            # 2. Classify atoms and get radii
-            radii = rdFreeSASA.classifyAtoms(molecule)
-
-            # 3. Define SASA options: Using ShrakeRupley algorithm and OONS classifier as an example
-            sasa_opts = rdFreeSASA.SASAOpts(rdFreeSASA.SASAAlgorithm.ShrakeRupley, rdFreeSASA.SASAClassifier.OONS)
-
-            # 4. Compute the SASA and store in descriptors dictionary
-            descriptors['FreeSASA'] = rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)
     else:
         descriptors['Error'] = f"Invalid SMILES: {smiles}"
 
-    return descriptors, img_str
-
+    return img_str
 
 def get_atom_counts(molecule):
     atom_counts = OrderedDict()
