@@ -108,6 +108,37 @@ def compute_descriptors(smiles, selected_options):
         if 'NumRotatableBonds' in selected_options:
             descriptors['Number of Rotatable Bonds'] = Lipinski.NumRotatableBonds(molecule)
 
+        if 'NumAliphaticCarbocycles' in selected_options:
+            descriptors['Number of Aliphatic Carbocycles'] = Lipinski.NumAliphaticCarbocycles(molecule)
+        if 'NumAliphaticHeterocycles' in selected_options:
+            descriptors['Number of Aliphatic Heterocycles'] = Lipinski.NumAliphaticHeterocycles(molecule)
+        if 'NumAliphaticRings' in selected_options:
+            descriptors['Number of Aliphatic Rings'] = Lipinski.NumAliphaticRings(molecule)
+        if 'NumAromaticCarbocycles' in selected_options:
+            descriptors['Number of Aromatic Carbocycles'] = Lipinski.NumAromaticCarbocycles(molecule)
+        if 'NumAromaticHeterocycles' in selected_options:
+            descriptors['Number of Aromatic Heterocycles'] = Lipinski.NumAromaticHeterocycles(molecule)
+        if 'NumAromaticRings' in selected_options:
+            descriptors['Number of Aromatic Rings'] = Lipinski.NumAromaticRings(molecule)
+        if 'NumSaturatedCarbocycles' in selected_options:
+            descriptors['Number of Saturated Carbocycles'] = Lipinski.NumSaturatedCarbocycles(molecule)
+        if 'NumSaturatedHeterocycles' in selected_options:
+            descriptors['Number of Saturated Heterocycles'] = Lipinski.NumSaturatedHeterocycles(molecule)
+        if 'NumSaturatedRings' in selected_options:
+            descriptors['Number of Saturated Rings'] = Lipinski.NumSaturatedRings(molecule)
+        if 'FractionCSP3' in selected_options:
+            descriptors['Fraction of C atoms that are SP3 hybridized'] = Lipinski.FractionCSP3(molecule)
+        if 'HeavyAtomCount' in selected_options:
+            descriptors['Number of Heavy Atoms'] = Lipinski.HeavyAtomCount(molecule)
+        if 'NHOHCount' in selected_options:
+            descriptors['Number of NHs or OHs'] = Lipinski.NHOHCount(molecule)
+        if 'NOCount' in selected_options:
+            descriptors['Number of Nitrogens and Oxygens'] = Lipinski.NOCount(molecule)
+        if 'NumHeteroatoms' in selected_options:
+            descriptors['Number of Heteroatoms'] = Lipinski.NumHeteroatoms(molecule)
+        if 'RingCount' in selected_options:
+            descriptors['Ring Count'] = Lipinski.RingCount(molecule)
+
         # rdkit.Chem.AtomPairs.Sheridan module
         if 'AssignPattyTypes' in selected_options:
             descriptors['AssignPattyTypes'] = Sheridan.AssignPattyTypes(molecule)
