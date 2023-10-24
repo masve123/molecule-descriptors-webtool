@@ -9,14 +9,8 @@ from rdkit.Chem.AtomPairs import Pairs, Sheridan, Torsions, Utils
 from io import BytesIO
 import base64
 
-#from app.routes import main  # Replace 'your_folder_name' with the actual folder name where routes.py is located
-
-#app = Flask(__name__)
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
-#app = Flask(__name__, static_folder='app/frontend', static_url_path='/app/frontend')
-
-#app.register_blueprint(main)
 
 
 
@@ -268,6 +262,3 @@ def download_csv():
         mimetype="text/csv",
         headers={"Content-disposition": f"attachment; filename=data_RDKit_{rdkit_version}.csv"}
     )
-
-if __name__ == '__main__':
-    app.run(debug=True)
