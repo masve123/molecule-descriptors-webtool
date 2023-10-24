@@ -4,17 +4,14 @@ import rdkit
 from rdkit import Chem, rdBase
 from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski
 from collections import OrderedDict
-from io import StringIO
+from io import StringIO, BytesIO
 import csv
-from io import BytesIO
 import base64
 from flask import jsonify
+import os
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
-
-
-
 
 @app.route('/')
 def index():
@@ -23,67 +20,70 @@ def index():
 
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
-    #selected_options = request.form.getlist('displayOptions')
-    selected_methods_json = request.form.get('selectedMethods')
-    
-    if selected_methods_json is None:
-        print("Error: 'selectedMethods' not received by server.")
-        # Handle the error as appropriate for your application
-        return "An error occurred"
-    
-    selected_methods = json.loads(selected_methods_json)
-
-    # Get the checkbox state for excluding invalid SMILES
-    exclude_invalid = request.form.get('excludeInvalid') == 'true'
-
-    file = request.files.get('csvFile')
-    if file and file.filename != '':
-        # Process the uploaded file
-        if not file.filename.endswith('.csv'):
-            # Invalid file type
-            return render_template('index.html', error="Invalid file type! Please upload a .csv file.")
-
-        smiles_list = []
-        csv_file = csv.reader(file.stream.read().decode("utf-8").splitlines())
-        for row in csv_file:
-            smiles_list.append(row[0])
-    else:
-        # No file uploaded, proceed with the input field
-        smiles_input = request.form.get('inputField', '')
-        smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
+    try:
+        #selected_options = request.form.getlist('displayOptions')
+        selected_methods_json = request.form.get('selectedMethods')
         
-
-
-    selected_options = request.form.getlist('displayOptions')
-
-    all_descriptors = []
-    for smiles in smiles_list:
-        descriptors = {}
+        if selected_methods_json is None:
+            print("Error: 'selectedMethods' not received by server.")
+            # Handle the error as appropriate for your application
+            return "An error occurred"
         
-        molecule = Chem.MolFromSmiles(smiles)
-        if molecule:
-            # Check if 'Image' was selected and add to the descriptors dictionary
-            if 'Image' in selected_options:
-                img_str = draw_to_html(smiles, selected_options)
-                if img_str:
-                    descriptors['Image'] = img_str
+        selected_methods = json.loads(selected_methods_json)
 
-            for method in selected_methods:
-                module_name, method_name = method.split('.')
-                module = getattr(rdkit.Chem, module_name, None)
-                if module:
-                    func = getattr(module, method_name, None)
-                    if func:
-                        descriptors[method_name] = func(molecule)
+        # Get the checkbox state for excluding invalid SMILES
+        exclude_invalid = request.form.get('excludeInvalid') == 'true'
+
+        file = request.files.get('csvFile')
+        if file and file.filename != '':
+            # Process the uploaded file
+            if not file.filename.endswith('.csv'):
+                # Invalid file type
+                return render_template('index.html', error="Invalid file type! Please upload a .csv file.")
+
+            smiles_list = []
+            csv_file = csv.reader(file.stream.read().decode("utf-8").splitlines())
+            for row in csv_file:
+                smiles_list.append(row[0])
         else:
-            if exclude_invalid:
-                continue
-            descriptors['Error'] = 'Invalid Molecule'
-        
-        all_descriptors.append(descriptors)
+            # No file uploaded, proceed with the input field
+            smiles_input = request.form.get('inputField', '')
+            smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
+            
 
-    return render_template('index.html', descriptors_list=all_descriptors)
 
+        selected_options = request.form.getlist('displayOptions')
+
+        all_descriptors = []
+        for smiles in smiles_list:
+            descriptors = {}
+            
+            molecule = Chem.MolFromSmiles(smiles)
+            if molecule:
+                # Check if 'Image' was selected and add to the descriptors dictionary
+                if 'Image' in selected_options:
+                    img_str = draw_to_html(smiles, selected_options)
+                    if img_str:
+                        descriptors['Image'] = img_str
+
+                for method in selected_methods:
+                    module_name, method_name = method.split('.')
+                    module = getattr(rdkit.Chem, module_name, None)
+                    if module:
+                        func = getattr(module, method_name, None)
+                        if func:
+                            descriptors[method_name] = func(molecule)
+            else:
+                if exclude_invalid:
+                    continue
+                descriptors['Error'] = 'Invalid Molecule'
+            
+            all_descriptors.append(descriptors)
+
+        return render_template('index.html', descriptors_list=all_descriptors)
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return render_template('index.html', error="An unexpected error occurred.")
 
 def get_all_methods(*modules):
     all_methods = {}
@@ -158,8 +158,6 @@ def docs():
 def about():
     return render_template('about.html')
 
-
-import os
 
 @app.route('/editor')
 def editor():
