@@ -12,8 +12,6 @@ import base64
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 
-
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -262,3 +260,6 @@ def download_csv():
         mimetype="text/csv",
         headers={"Content-disposition": f"attachment; filename=data_RDKit_{rdkit_version}.csv"}
     )
+
+if __name__ == '__main__':
+    app.run(debug=True)
