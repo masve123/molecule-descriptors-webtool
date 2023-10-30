@@ -30,7 +30,7 @@
                 <ul class="tab-list">
                     <div class="tab active" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">RDKit Lipinski</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-crippen')">RDKit Crippen</div>
+                    <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">RDKit Crippen</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>   
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div> 
@@ -45,67 +45,49 @@
                     <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES from result</label>
                     <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
                 </div>
-                
                 <div id="rdkit-chem" class="tab-content">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="MolecularWeight"> Molecular Weight</label>
-                        <label><input type="checkbox" name="displayOptions" value="PSA"> Polar Surface Area</label>
-                        <label><input type="checkbox" name="displayOptions" value="numberOfAtoms"> Number of Atoms</label>
-
-                        <!-- rdkit.Chem.AtomPairs.Sheridan module -->
-                        <label><input type="checkbox" name="displayOptions" value="AssignPattyTypes"> Assign Patty Types</label>
-
-                        <!-- rdkit.Chem.AtomPairs.Torsions module -->
-                        <label><input type="checkbox" name="displayOptions" value="GetTopologicalTorsionFingerprintAsIds"> Topological Torsion Fingerprint As IDs</label>        
+                        {% for descriptor_name in all_descriptors.chem %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
-                
-                <!-- RDKit Other Tab Content -->
                 <div id="rdkit-Lipinski" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="NumHDonors"> Number of H-Bond Donors</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumHAcceptors"> Number of H-Bond Acceptors</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumRotatableBonds"> Number of Rotatable Bonds</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAliphaticCarbocycles"> Number of Aliphatic Carbocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAliphaticHeterocycles"> Number of Aliphatic Heterocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAliphaticRings"> Number of Aliphatic Rings</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAromaticCarbocycles"> Number of Aromatic Carbocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAromaticHeterocycles"> Number of Aromatic Heterocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumAromaticRings"> Number of Aromatic Rings</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumSaturatedCarbocycles"> Number of Saturated Carbocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumSaturatedHeterocycles"> Number of Saturated Heterocycles</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumSaturatedRings"> Number of Saturated Rings</label>
-                        <label><input type="checkbox" name="displayOptions" value="FractionCSP3"> Fraction of C atoms that are SP3 hybridized</label>
-                        <label><input type="checkbox" name="displayOptions" value="HeavyAtomCount"> Number of Heavy Atoms</label>
-                        <label><input type="checkbox" name="displayOptions" value="NHOHCount"> Number of NHs or OHs</label>
-                        <label><input type="checkbox" name="displayOptions" value="NOCount"> Number of Nitrogens and Oxygens</label>
-                        <label><input type="checkbox" name="displayOptions" value="NumHeteroatoms"> Number of Heteroatoms</label>
-                        <label><input type="checkbox" name="displayOptions" value="RingCount"> Ring Count</label>
+                        {% for descriptor_name in all_descriptors.lipinski %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
-
-                <div id="rdkit-crippen" class="tab-content" style="display: none;">
+                <div id="rdkit-Crippen" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="clogP"> clogP</label>
+                        {% for descriptor_name in all_descriptors.crippen %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
-
                 <div id="rdkit-QED" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="QED"> QED</label>
+                        {% for descriptor_name in all_descriptors.qed %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
-
                 <div id="rdkit-rdFreeSASA" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
-                        <label><input type="checkbox" name="displayOptions" value="FreeSASA"> Solvent Accessible Surface Area</label>
+                        {% for descriptor_name in all_descriptors.rdfreesasa %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
-
                 <div id="rdkit-AllChem" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
+                        {% for descriptor_name in all_descriptors.allchem %}
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        {% endfor %}
                     </div>
                 </div>
+ 
                 <div id="search-tab" class="tab-content" style="display: none;">
                     <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
                     <div id="searchResults" class="checkbox-container"></div>
