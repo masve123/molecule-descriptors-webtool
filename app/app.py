@@ -14,12 +14,16 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    all_descriptors = get_all_descriptors()
+    return render_template('index.html', all_descriptors=all_descriptors)
+
 
 
 @app.route('/identify_molecule', methods=['POST'])
 def identify_molecule():
+    global_descriptors = get_all_descriptors()  # Renamed variable here
     selected_options = request.form.getlist('displayOptions')
+
 
     # Get the checkbox state for excluding invalid SMILES
     exclude_invalid = request.form.get('excludeInvalid') == 'true'
@@ -44,12 +48,14 @@ def identify_molecule():
     if exclude_invalid:
         smiles_list = [smiles for smiles in smiles_list if Chem.MolFromSmiles(smiles) is not None]
 
-    all_descriptors = []
+    computed_descriptors = []  # Renamed variable here
     for smiles in smiles_list:
         descriptors, img_str = compute_descriptors(smiles, selected_options)
-        all_descriptors.append(descriptors)
+        computed_descriptors.append(descriptors)  # Renamed variable here
 
-    return render_template('index.html', descriptors_list=all_descriptors)
+    #print(selected_options)
+    return render_template('index.html', descriptors_list=computed_descriptors, all_descriptors=global_descriptors)
+    #return render_template('index.html', descriptors_list=all_descriptors)
 
 
 
@@ -67,8 +73,72 @@ def generate_csv(data):
 
     return output.getvalue()
 
+import inspect
+
+# ... and other relevant modules
+
+def get_all_descriptors():
+    all_descriptors = {
+    'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction)},
+    'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction)},
+    'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction)},
+    'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction)},
+    'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction)},
+    'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction)},
+
+    # Legg til pakker her og i compute_descriptors !
+    }
+    
+
+    return all_descriptors
+
+all_descriptors = get_all_descriptors()
+
 
 def compute_descriptors(smiles, selected_options):
+    molecule = Chem.MolFromSmiles(smiles)
+    descriptors = {}
+    img_str = None  # Initialize img_str here
+
+    if molecule is not None:
+        descriptors['SMILES'] = smiles
+        for option in selected_options:
+            if option in all_descriptors['chem']:
+                descriptors[option] = all_descriptors['chem'][option](molecule)
+            elif option in all_descriptors['lipinski']:
+                descriptors[option] = all_descriptors['lipinski'][option](molecule)
+            elif option in all_descriptors['crippen']:
+                descriptors[option] = all_descriptors['crippen'][option](molecule)
+            elif option in all_descriptors['qed']:
+                descriptors[option] = all_descriptors['qed'][option](molecule)
+            # ... continue this pattern for other descriptor categories
+
+            if 'Image' in selected_options:
+                img = Draw.MolToImage(molecule)
+                buffered = BytesIO()
+                img.save(buffered, format="PNG")
+                img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+                descriptors['Image'] = img_str
+            if 'FreeSASA' in selected_options:
+                # 1. Generate 3D coordinates for the molecule
+                AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
+
+                # 2. Classify atoms and get radii
+                radii = rdFreeSASA.classifyAtoms(molecule)
+
+                # 3. Define SASA options: Using ShrakeRupley algorithm and OONS classifier as an example
+                sasa_opts = rdFreeSASA.SASAOpts(rdFreeSASA.SASAAlgorithm.ShrakeRupley, rdFreeSASA.SASAClassifier.OONS)
+
+                # 4. Compute the SASA and store in descriptors dictionary
+                descriptors['FreeSASA'] = rdFreeSASA.CalcSASA(molecule, radii, confIdx=-1, opts=sasa_opts)
+    else:
+        descriptors['Error'] = f"Invalid SMILES: {smiles}"
+
+    return descriptors, img_str
+
+
+
+def compute_descriptors2(smiles, selected_options):
     molecule = Chem.MolFromSmiles(smiles)
     descriptors = {}
     img_str = None  # Initialize img_str here
