@@ -79,12 +79,12 @@ import inspect
 
 def get_all_descriptors():
     all_descriptors = {
-    'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction)},
+    'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if 'auto' not in name.lower()},
     'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction)},
     'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction)},
     'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction)},
     'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction)},
-    'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction)},
+    'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if 'namedtuple' not in name.lower() and 'rundoctest' not in name.lower()},
 
     # Legg til pakker her og i compute_descriptors !
     }
