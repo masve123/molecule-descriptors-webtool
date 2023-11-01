@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
+    <title>feedback</title>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="logo"><a class="title-link" href="{{ url_for('index') }}">MolDescriptor</a></div>
+        <div class="links">
+            <a href="{{ url_for('feedback') }}" class="draw-link">FEEDBACK</a>
+            <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
+            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>    
+        </div>
+    </div>
+    <div class="content">
+        <h1>Feedback 🛠️</h1>
+        <p>
+            We are always looking for ways to improve our website. If you have any suggestions, please let us know!
+        </p>
+        <b>Test our website</b>
+        <p>
+            MolDescriptor is still in development, and we need your help to make it better.
+        </p>
+            Test our website using the <a href="https://forms.gle/9NuA4YHRScfdA5Gk6">testing form</a>
+        <p>
+        <b>Contact us about improvements</b>
+        <p>
+            Send us an email about improvements: <!--<a href="mailto:example@example.com?subject=Feedback&body=MolDescriptor Feedback">dev@moldescriptor.com</a>-->
+        </p>
+    </div>
+    
+
+</body>
+</html>
