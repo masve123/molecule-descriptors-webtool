@@ -1,10 +1,13 @@
-body, html {
-    background-color: #f4f4f4; 
+body,
+html {
+    background-color: #f4f4f4;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     height: 100%;
 }
+
+
 
 .top-bar {
     background-color: #3a3a3a;
@@ -50,7 +53,7 @@ body, html {
     font-size: 34px;
     font-weight: bold;
     margin: 10px 0;
-    text-align: center;    
+    text-align: center;
 }
 
 .mol {
@@ -92,7 +95,7 @@ input[type="text"] {
     color: #777;
     flex: 1;
     text-align: center;
-    border: 1px solid transparent; 
+    border: 1px solid transparent;
     transition: color 0.3s, border-color 0.3s;
 }
 
@@ -109,6 +112,10 @@ input[type="text"] {
 
 .tab-content .checkbox-container {
     margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+
+
 }
 
 label {
@@ -137,11 +144,14 @@ table {
     border-collapse: collapse;
 }
 
-table, th, td {
+table,
+th,
+td {
     border: 1px solid #e0e0e0;
 }
 
-th, td {
+th,
+td {
     padding: 10px;
     text-align: left;
 }
@@ -154,26 +164,28 @@ th {
     display: none;
 }
 
-input[type="submit"], .file-upload-label {
-    box-sizing: border-box;     
-    font-size: 16px;          
-    line-height: 40px;        
+input[type="submit"],
+.file-upload-label {
+    box-sizing: border-box;
+    font-size: 16px;
+    line-height: 40px;
     text-align: center;
     height: 40px;
-    margin-right: 10px; 
+    margin-right: 10px;
     display: inline-block;
     padding: 0 20px;
 }
 
 .file-upload-label {
-    background-color: #666;    
+    background-color: #666;
     color: #fff;
     border: none;
     cursor: pointer;
     border-radius: 4px;
 }
 
-input[type="submit"]:hover, .file-upload-label:hover {
+input[type="submit"]:hover,
+.file-upload-label:hover {
     opacity: 0.8;
 }
 
@@ -191,20 +203,23 @@ input[type="submit"]:hover, .file-upload-label:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    border: none; /* optional, to remove any border from the iframe */
+    border: none;
+    /* optional, to remove any border from the iframe */
 }
 
 /* For about page */
 
 .content {
-    max-width: 800px; 
+    max-width: 800px;
     margin: 40px auto;
     padding: 0 20px;
     font-family: Arial, sans-serif;
     line-height: 1.6;
 }
 
-.content h1, .content h2, .content h3 {
+.content h1,
+.content h2,
+.content h3 {
     margin-top: 24px;
     margin-bottom: 16px;
 }
@@ -227,7 +242,8 @@ input[type="submit"]:hover, .file-upload-label:hover {
     margin: 20px 0;
 }
 
-.content ul, .content ol {
+.content ul,
+.content ol {
     margin: 20px;
     padding-left: 40px;
 }
@@ -237,7 +253,8 @@ input[type="submit"]:hover, .file-upload-label:hover {
 }
 
 .content a {
-    color: #007bff; /* markdown link color */
+    color: #007bff;
+    /* markdown link color */
     text-decoration: none;
 }
 
@@ -279,6 +296,6 @@ input[type="submit"]:hover, .file-upload-label:hover {
 
 .rdkit-badge {
     display: grid;
-    place-items: center; 
+    place-items: center;
     height: 5%;
 }

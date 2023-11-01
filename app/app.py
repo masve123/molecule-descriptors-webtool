@@ -79,20 +79,29 @@ import inspect
 
 def get_all_descriptors():
     all_descriptors = {
-    'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if 'auto' not in name.lower()},
-    'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction)},
-    'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction)},
-    'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction)},
-    'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction)},
-    'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if 'namedtuple' not in name.lower() and 'rundoctest' not in name.lower()},
-
-    # Legg til pakker her og i compute_descriptors !
+        'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if filter_method(name)},
+        'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction) if filter_method(name)},
+        'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction) if filter_method(name)},
+        'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction) if filter_method(name)},
+        'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction) if filter_method(name)},
+        'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if filter_method(name)},
     }
+
     
 
     return all_descriptors
 
+### Checks if the mtehod contains name of methods that dont work.
+def filter_method(name):
+        not_working_methods = ["rundoctest", "auto", 'namedtuple']
+        for not_working in not_working_methods:
+            if not_working.lower() in name.lower():
+                return False
+        return True
+
+
 all_descriptors = get_all_descriptors()
+
 
 
 def compute_descriptors(smiles, selected_options):

@@ -9,6 +9,7 @@
     <title>MolDescriptor</title>
 
 </head>
+
 <body>
 
     <div class="top-bar">
@@ -16,14 +17,15 @@
         <div class="links">
             <a href="{{ url_for('draw') }}" class="draw-link">DRAW</a>
             <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
-            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>            
+            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
         </div>
     </div>
 
     <div class="form-container">
         <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
         <form action="/identify_molecule" method="post" enctype="multipart/form-data">
-            <input type="text" id="smiles" name="inputField" placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
+            <input type="text" id="smiles" name="inputField"
+                placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
             <br>
             <!-- Tabs navigation -->
             <div class="tabs">
@@ -31,10 +33,10 @@
                     <div class="tab active" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">RDKit Lipinski</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">RDKit Crippen</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>   
+                    <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div> 
-                    <div class="tab" onclick="showTab(event, 'search-tab')">Search</div>      
+                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>
+                    <div class="tab" onclick="showTab(event, 'search-tab')">Search</div>
                 </ul>
             </div>
 
@@ -42,56 +44,63 @@
             <div class="tab-contents">
                 <!-- RDKit Chem Tab Content -->
                 <div class="special-checkbox">
-                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES from result</label>
+                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES
+                        from result</label>
                     <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
                 </div>
                 <div id="rdkit-chem" class="tab-content">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.chem %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
                 <div id="rdkit-Lipinski" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.lipinski %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
                 <div id="rdkit-Crippen" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.crippen %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
                 <div id="rdkit-QED" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.qed %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
                 <div id="rdkit-rdFreeSASA" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.rdfreesasa %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
                 <div id="rdkit-AllChem" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.allchem %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{ descriptor_name }}</label>
+                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
+                            descriptor_name }}</label>
                         {% endfor %}
                     </div>
                 </div>
- 
+
                 <div id="search-tab" class="tab-content" style="display: none;">
                     <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
                     <div id="searchResults" class="checkbox-container"></div>
-                </div>                
+                </div>
             </div>
             <div class="button-group">
                 <input type="submit" value="Get Result">
@@ -99,9 +108,9 @@
                 <label for="csvFile" class="file-upload-label">Upload a CSV</label>
                 <input type="file" id="csvFile" name="csvFile" accept=".csv">
             </div>
-            
+
         </form>
-        
+
         {% if descriptors_list %}
         <h2>Descriptors:</h2>
         {% for descriptors in descriptors_list %}
@@ -119,28 +128,30 @@
                     <td>{{ key }}</td>
                     <td>
                         {% if key == "Image" %}
-                        <img src="data:image/png;base64,{{ value }}" alt="Molecule Image" width="200"> <!-- Adjust width as needed -->
+                        <img src="data:image/png;base64,{{ value }}" alt="Molecule Image" width="200">
+                        <!-- Adjust width as needed -->
                         {% else %}
                         {{ value }}
                         {% endif %}
                     </td>
                 </tr>
                 {% endfor %}
-            </tbody>            
+            </tbody>
         </table>
         {% endfor %}
         <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
         {% endif %}
         {% if error %}
         <div class="error-message">
-     {{ error }}
-</div>
-{% endif %}
+            {{ error }}
+        </div>
+        {% endif %}
 
-        
+
     </div>
     <div class="rdkit-badge">
-        <a href="https://www.rdkit.org/"><img alt="Powered by RDKit" src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"></a>
+        <a href="https://www.rdkit.org/"><img alt="Powered by RDKit"
+                src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"></a>
     </div>
 
     <script>
@@ -162,16 +173,16 @@
 
             if (tabId !== 'search-tab') {
                 var searchCheckboxes = document.querySelectorAll('#searchResults input[type="checkbox"]');
-                searchCheckboxes.forEach(function(sCheckbox) {
-                var mainCheckbox = document.querySelector('.checkbox-container label input[value="' + sCheckbox.value + '"]');
-            if (mainCheckbox) {
-                mainCheckbox.checked = sCheckbox.checked;
+                searchCheckboxes.forEach(function (sCheckbox) {
+                    var mainCheckbox = document.querySelector('.checkbox-container label input[value="' + sCheckbox.value + '"]');
+                    if (mainCheckbox) {
+                        mainCheckbox.checked = sCheckbox.checked;
+                    }
+                });
             }
-        });
-    }
         }
-        
-        document.getElementById('csvFile').addEventListener('change', function() {
+
+        document.getElementById('csvFile').addEventListener('change', function () {
             if (this.value) {
                 this.form.submit();
             }
@@ -184,7 +195,7 @@
             var searchResults = document.getElementById('searchResults');
             searchResults.innerHTML = ''; // clear previous search results
 
-            if (!filter) return; 
+            if (!filter) return;
 
             for (var i = 0; i < labels.length; i++) {
                 var label = labels[i];
@@ -196,11 +207,11 @@
                     if (existingDescriptor) continue; // Skip
 
                     var clonedLabel = label.cloneNode(true);
-                    clonedLabel.querySelector('input').addEventListener('change', function(e) {        
+                    clonedLabel.querySelector('input').addEventListener('change', function (e) {
                         var checkbox = document.querySelector('.checkbox-container label input[value="' + e.target.value + '"]');
                         checkbox.checked = e.target.checked;
                     });
-                    clonedLabel.querySelector('input').addEventListener('change', function() {
+                    clonedLabel.querySelector('input').addEventListener('change', function () {
                         document.getElementById('searchBar').value = ''; // Clear the search field
                     });
 
@@ -211,7 +222,7 @@
 
 
     </script>
-    
-</body>    
+
+</body>
 
 </html>
