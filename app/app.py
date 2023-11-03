@@ -254,6 +254,10 @@ def get_atom_counts(molecule):
 def feedback():
     return render_template('feedback.html')
 
+@app.route('/draw')
+def draw():
+    return render_template('draw.html')
+
 @app.route('/docs')
 def docs():
     return render_template('docs.html')
