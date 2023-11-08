@@ -1,7 +1,6 @@
 # MolDescriptor
 
-## Introduction
-MolDescriptor is a simple, user-friendly web application where users can input molecules (in a SMILES string) and use RDkit, an open source Python package, to calculate various descriptors. The descriptors are then displayed in a table on the website. The result can also be downloaded as a CSV file.
+[MolDescriptor](https://moldescriptor.com/) is a simple, user-friendly web application where users can input molecules (in a SMILES string) and use RDkit, an open source Python package, to calculate various descriptors. The descriptors are then displayed in a table on the website. The result can also be downloaded as a CSV file.
 
 ## Features
 
