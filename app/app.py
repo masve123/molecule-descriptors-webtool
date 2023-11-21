@@ -38,10 +38,10 @@ def identify_molecule():
         smiles_list = []
         csv_file = csv.reader(file.stream.read().decode("utf-8").splitlines())
         for row in csv_file:
-            smiles_list.append(row[0])
+            smiles_list.append(row[0].upper())
     else:
         # No file uploaded, proceed with the input field
-        smiles_input = request.form.get('inputField', '')
+        smiles_input = request.form.get('inputField', '').upper()
         smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
 
     # Exclude invalid SMILES if checkbox is checked
