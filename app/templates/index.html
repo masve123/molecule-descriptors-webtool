@@ -43,6 +43,10 @@
 
 
             <div class="tab-contents">
+                <div id="search-tab" class="tab-content" style="display: none;">
+                    <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
+                    <div id="searchResults" class="checkbox-container"></div>
+                </div>
                 <!-- RDKit Chem Tab Content -->
                 <div class="special-checkbox">
                     <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES
@@ -98,10 +102,6 @@
                     </div>
                 </div>
 
-                <div id="search-tab" class="tab-content" style="display: none;">
-                    <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
-                    <div id="searchResults" class="checkbox-container"></div>
-                </div>
             </div>
             <div class="button-group">
                 <input type="submit" value="Get Result">
