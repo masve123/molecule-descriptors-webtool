@@ -93,7 +93,8 @@ def get_all_descriptors():
 
 ### Checks if the mtehod contains name of methods that dont work.
 def filter_method(name):
-        not_working_methods = ["rundoctest", "auto", 'namedtuple']
+        not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts']
+        #not_working_methods = []
         for not_working in not_working_methods:
             if not_working.lower() in name.lower():
                 return False
