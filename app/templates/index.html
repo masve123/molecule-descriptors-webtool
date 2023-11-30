@@ -37,13 +37,16 @@
                     <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>
-                    <div class="tab" onclick="showTab(event, 'search-tab')">Search</div>
+                    <div class="tab" onclick="showTab(event, 'search-tab')">Search descriptors</div>
                 </ul>
             </div>
 
 
             <div class="tab-contents">
                 <div id="search-tab" class="tab-content" style="display: none;">
+                    Descriptor names need to match the ones which can be found in the official RDKit-documentation. A
+                    comprehensive list of available descriptors and how they work can be found <a
+                        href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.
                     <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
                     <div id="searchResults" class="checkbox-container"></div>
                 </div>
