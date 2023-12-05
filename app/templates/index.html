@@ -22,13 +22,9 @@
             <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
         </div>
     </div>
-    MolDescriptor is a webtool for calculating chemical descriptors from <a
-        href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different
-    molecules
-    using
-    SMILES-strings as an input
     <div class="form-container">
         <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
+        <div class="app-description">MolDescriptor is a webtool for calculating chemical descriptors from <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different molecules using SMILES-strings as an input</div>
         <form action="/identify_molecule" method="post" enctype="multipart/form-data">
             <input type="text" id="smiles" name="inputField"
                 placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
