@@ -6,6 +6,15 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
     <title>Draw</title>
+    
+    <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='editor-molecules/node_modules/jsme-editor/jsme.nocache.js') }}"></script>
+
+    <script>
+    //this function will be called after the JavaScriptApplet code has been loaded.
+        function jsmeOnLoad() {
+            jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+    }
+    </script>
 </head>
 <body>
     <div class="top-bar">
@@ -17,8 +26,6 @@
             <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>    
         </div>
     </div>
-    <div class="iframe-container">
-        <iframe src="http://192.168.0.120:8501" title="drawing tool" height="800" width="1200"></iframe>
-    </div>
+    <div id="jsme_container"></div>
 </body>
 </html>

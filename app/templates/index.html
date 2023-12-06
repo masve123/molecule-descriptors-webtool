@@ -7,8 +7,6 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
     <title>MolDescriptor</title>
-
-
 </head>
 
 <body>
@@ -26,9 +24,18 @@
         <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
         <div class="app-description">MolDescriptor is a webtool for calculating chemical descriptors from <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different molecules using SMILES-strings as an input</div>
         <form action="/identify_molecule" method="post" enctype="multipart/form-data">
-            <input type="text" id="smiles" name="inputField"
-                placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
-            <br>
+            <div class="input-container">
+                <input type="text" id="smiles" name="inputField"
+                    placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
+                <input type="submit" value="Get Result">
+            </div>
+            <div class="button-group">
+                <label for="csvFile" class="file-upload-label">Upload CSV</label>
+                <input type="file" id="csvFile" name="csvFile" accept=".csv" onchange="this.form.submit()">
+                <input type="submit" formaction="/download_csv" value="Download CSV">
+                <input type="file" id="csvFile" name="csvFile" accept=".csv">
+                <button type="button" class="draw-button" onclick="openMoleculeDrawer()">Draw</button>
+            </div>
             <!-- Tabs navigation -->
             <div class="tabs">
                 <ul class="tab-list">
@@ -107,13 +114,6 @@
                 </div>
 
             </div>
-            <div class="button-group">
-                <input type="submit" value="Get Result">
-                <input type="submit" formaction="/download_csv" value="Download CSV">
-                <label for="csvFile" class="file-upload-label">Upload a CSV</label>
-                <input type="file" id="csvFile" name="csvFile" accept=".csv">
-            </div>
-
         </form>
 
         {% if descriptors_list %}
@@ -186,6 +186,12 @@
                 });
             }
         }
+
+        function openMoleculeDrawer() {
+                // Implement the logic to open the molecule drawer
+                // Example: open a modal or redirect to a drawing page
+                alert('Open the molecule drawing tool here');
+            }
 
         document.getElementById('csvFile').addEventListener('change', function () {
             if (this.value) {

@@ -1,5 +1,4 @@
-body,
-html {
+body, html {
     background-color: #f4f4f4;
     font-family: Arial, sans-serif;
     margin: 0;
@@ -16,8 +15,7 @@ html {
     text-align: center;
     font-weight: bold;
     justify-content: center;
-    align-items: center;
-    
+    align-items: center; 
 }
 
 
@@ -55,7 +53,7 @@ html {
     border: 1px solid #e0e0e0;
     margin: 40px auto;
     padding: 20px;
-    max-width: 700px;
+    max-width: 750px;
     border-radius: 5px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
@@ -174,34 +172,6 @@ th {
     background-color: #f7f7f7;
 }
 
-#csvFile {
-    display: none;
-}
-
-input[type="submit"],
-.file-upload-label {
-    box-sizing: border-box;
-    font-size: 16px;
-    line-height: 40px;
-    text-align: center;
-    height: 40px;
-    margin-right: 10px;
-    display: inline-block;
-    padding: 0 20px;
-}
-
-.file-upload-label {
-    background-color: #666;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-input[type="submit"]:hover,
-.file-upload-label:hover {
-    opacity: 0.8;
-}
 
 /* For drawing page */
 .iframe-container {
@@ -302,4 +272,58 @@ input[type="submit"]:hover,
     display: grid;
     place-items: center;
     height: 5%;
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px; /* Space between input field and button group */
+}
+
+input[type="text"] {
+    flex-grow: 1; /* Allows the input field to take up available space */
+    margin-right: 10px; /* Space between the input field and the submit button */
+}
+
+.button-group > * {
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: normal;
+    margin-right: 10px; /* Space between buttons */
+    text-align: center;
+}
+
+.button-group > *:hover {
+    background-color: #e69500;
+}
+
+/* Styling for the label used as the 'Upload CSV' button */
+.file-upload-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 10px 20px; /* Same padding as other buttons */
+    border-radius: 4px;
+    background-color: #ffa500;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: normal;
+    margin-right: 10px; /* Consistent margin with other buttons */
+    text-decoration: none; /* In case it's styled as a link */
+}
+
+.file-upload-label:hover {
+    background-color: #e69500;
+}
+
+/* Hide the actual file input */
+#csvFile {
+    display: none;
 }
