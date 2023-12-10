@@ -1,5 +1,7 @@
 # Utility functions, e.g., RDKit calculations
 
+# This file has not been utilized in the project. It is a template for future development.
+
 from rdkit import Chem
 from rdkit.Chem import Descriptors
 from rdkit.Chem import QED

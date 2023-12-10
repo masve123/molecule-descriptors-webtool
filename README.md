@@ -2,6 +2,10 @@
 
 [MolDescriptor](https://moldescriptor.com/) is a simple, user-friendly web application where users can input molecules (in a SMILES string) and use RDkit, an open source Python package, to calculate various descriptors. The descriptors are then displayed in a table on the website. The result can also be downloaded as a CSV file.
 
+The goal of this project is to utilize RDKit to calculate descriptors and make them easily accessible to users. The descriptors are organized into tabs based on the RDKit modules they belong to. Users can also search for specific descriptors using the search tab. The descriptors are calculated using RDKit and displayed in a table on the website. The end goal is making life easier for people with a chemical background who want to calculate descriptors for their molecules, without having to worry about learning Python. 
+
+
+
 ## Features
 
 - SMILES Input: Directly type in or paste the SMILES notation for your molecule.
@@ -31,6 +35,10 @@ If you're interested in contributing to the development of MolDescriptor, please
 - Frontend: HTML, CSS, and JavaScript
 
 ## The contents of the project
+
+- ```/app```
+This directory contains the Flask application and is the main entry point. In particular, ```app.py``` is the main file where the Flask app is created.
+
 - ```/static```  
 This directory is used to store static files, such as CSS files, JavaScript files, and images. These files don't change and are served as-is to the client.
 For example, if you have a CSS file to style your web application, you would place it in the static directory.
