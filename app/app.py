@@ -17,6 +17,7 @@ import csv
 from rdkit.Chem.AtomPairs import Pairs, Sheridan, Torsions, Utils
 import inspect
 import os
+import re
 
 from io import BytesIO
 import base64
@@ -57,7 +58,8 @@ def identify_molecule():
     else:
         # No file uploaded, proceed with the input field
         smiles_input = request.form.get('inputField', '').upper()
-        smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
+        #smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
+        smiles_list = [s.strip() for s in re.split(r'[,.]', smiles_input) if s.strip() != '']
 
     # Exclude invalid SMILES if checkbox is checked
     if exclude_invalid:

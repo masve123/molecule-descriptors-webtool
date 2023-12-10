@@ -191,11 +191,19 @@
         }
 
         function jsmeOnLoad() {
-        // Initialize the JSME applet only once
-        if (!window.jsmeApplet) {
-            window.jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
-        }
+    if (!window.jsmeApplet) {
+        window.jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+
+        // Event listener for when the molecule changes
+        window.jsmeApplet.setAfterStructureModifiedCallback(function () {
+            var smiles = window.jsmeApplet.smiles(); // Get the SMILES string of the drawn molecule
+            var formattedSmiles = smiles.replace(/\n/g, ','); // Replace newline with comma
+            document.getElementById('smiles').value = formattedSmiles; // Update the input field
+        });
     }
+}
+
+
 
     function openMoleculeDrawer() {
         var jsmeContainer = document.getElementById('jsme_container');
