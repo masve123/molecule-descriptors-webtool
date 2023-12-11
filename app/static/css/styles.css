@@ -327,3 +327,17 @@ input[type="text"] {
 #csvFile {
     display: none;
 }
+
+.search-description {
+    font-size: 14px; /* Example font size */
+    color: #555; /* Example text color */
+    margin-bottom: 10px; /* Spacing below the text */
+    text-align: left; /* Align text to the left */
+}
+
+#searchBar {
+    background-color: #e7e7e7; /* Light grey background */
+    border: 2px solid #333; /* Darker border */
+    padding: 8px; /* More padding */
+    margin-bottom: 15px; /* Spacing below the input field */
+}

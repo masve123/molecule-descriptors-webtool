@@ -16,8 +16,7 @@
         <div class="logo"><a class="title-link" href="{{ url_for('index') }}">MolDescriptor</a></div>
         <div class="links">
             <a href="{{ url_for('feedback') }}" class="feedback-link">FEEDBACK</a>
-            <a href="{{ url_for('draw') }}" class="draw-link">DRAW</a>
-            <a href="{{ url_for('docs') }}" class="docs-link">DOCS</a>
+            <a href="{{ url_for('docs') }}" class="docs-link">HELP</a>
             <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
         </div>
     </div>
@@ -35,29 +34,27 @@
                 <input type="file" id="csvFile" name="csvFile" accept=".csv" onchange="this.form.submit()">
                 <input type="submit" formaction="/download_csv" value="Download CSV">
                 <input type="file" id="csvFile" name="csvFile" accept=".csv">
-                <button type="button" class="draw-button" onclick="openMoleculeDrawer()">Draw</button>
+                <button type="button" class="draw-button" onclick="openMoleculeDrawer()">Draw Molecules</button>
             </div>
             <!-- Tabs navigation -->
             <div id="jsme_container" style="display: none; width: 380px; height: 340px; margin: auto;"></div>
             <div class="tabs">
                 <ul class="tab-list">
-                    <div class="tab active" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
+                    <div class="tab" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">RDKit Lipinski</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">RDKit Crippen</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>
-                    <div class="tab" onclick="showTab(event, 'search-tab')">Search descriptors</div>
+                    <div class="tab active" onclick="showTab(event, 'search-tab')">Search descriptors</div>
                 </ul>
             </div>
 
             
 
             <div class="tab-contents">
-                <div id="search-tab" class="tab-content" style="display: none;">
-                    Descriptor names need to match the ones which can be found in the official RDKit-documentation. A
-                    comprehensive list of available descriptors and how they work can be found <a
-                        href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.
+                <div id="search-tab" class="tab-content" style="display: block;">
+                    <p class="search-description">Descriptor names need to match the ones which can be found in the official RDKit-documentation. A comprehensive list of available descriptors and how they work can be found <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.</p>
                     <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
                     <div id="searchResults" class="checkbox-container"></div>
                 </div>
@@ -67,7 +64,7 @@
                         from result</label>
                     <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
                 </div>
-                <div id="rdkit-chem" class="tab-content">
+                <div id="rdkit-chem" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.chem %}
                         <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
