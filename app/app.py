@@ -1,13 +1,3 @@
-"""
-Main module for the Flask web application.
-
-This module initializes and configures the Flask application. It defines various routes 
-and endpoints to handle different web requests, integrating functionalities such as 
-retrieving, processing, and presenting data. The application might include features like 
-user authentication, data visualization, API interactions, or any specific business logic 
-relevant to the project.
-"""
-
 from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
 from rdkit import Chem, rdBase
 from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski
@@ -15,9 +5,6 @@ from collections import OrderedDict
 from io import StringIO
 import csv
 from rdkit.Chem.AtomPairs import Pairs, Sheridan, Torsions, Utils
-import inspect
-import os
-import re
 
 from io import BytesIO
 import base64
@@ -27,9 +14,6 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
 
 @app.route('/')
 def index():
-    """
-    Renders the index page of the web application.
-    """
     all_descriptors = get_all_descriptors()
     return render_template('index.html', all_descriptors=all_descriptors)
 
@@ -58,8 +42,7 @@ def identify_molecule():
     else:
         # No file uploaded, proceed with the input field
         smiles_input = request.form.get('inputField', '').upper()
-        #smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
-        smiles_list = [s.strip() for s in re.split(r'[,.]', smiles_input) if s.strip() != '']
+        smiles_list = [s.strip() for s in smiles_input.split(',') if s.strip() != '']
 
     # Exclude invalid SMILES if checkbox is checked
     if exclude_invalid:
@@ -76,10 +59,9 @@ def identify_molecule():
 
 
 
+
+
 def generate_csv(data):
-    """Generates a CSV file from a dictionary of data.
-    It takes a dictionary of data and returns a CSV file as a string.
-    """
     output = StringIO()
     writer = csv.writer(output)
 
@@ -91,9 +73,11 @@ def generate_csv(data):
 
     return output.getvalue()
 
+import inspect
+
+# ... and other relevant modules
 
 def get_all_descriptors():
-    """Returns a dictionary of all relevant descriptors in RDKit"""
     all_descriptors = {
         'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if filter_method(name)},
         'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction) if filter_method(name)},
@@ -102,14 +86,17 @@ def get_all_descriptors():
         'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction) if filter_method(name)},
         'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if filter_method(name)},
     }
+    
+    # Manually added methods
+    all_descriptors['rdfreesasa']["FreeSASA"] = "FreeSASA"
+    
 
     return all_descriptors
 
-
+### Checks if the mtehod contains name of methods that dont work. Manual tests
 def filter_method(name):
-        """Checks whether the method name contains any of the strings in the list"""
-        
         not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts']
+        #not_working_methods = []
         for not_working in not_working_methods:
             if not_working.lower() in name.lower():
                 return False
@@ -121,40 +108,6 @@ all_descriptors = get_all_descriptors()
 
 
 def compute_descriptors(smiles, selected_options):
-    """
-    Compute various chemical descriptors and potentially an image for a given molecule.
-
-    This function takes a SMILES (Simplified Molecular Input Line Entry System) string representing 
-    a molecule and a list of selected descriptor options. It computes the specified descriptors
-    from different categories (like chem, lipinski, crippen, qed) for the molecule. If 'Image' 
-    is in the selected options, it also generates an image of the molecule. For the option 'FreeSASA', 
-    it computes the Solvent Accessible Surface Area (SASA) using the ShrakeRupley algorithm.
-
-    Parameters:
-    - smiles (str): A SMILES string representing the molecule.
-    - selected_options (list of str): A list of descriptor options to compute. Options can 
-      include 'chem', 'lipinski', 'crippen', 'qed', 'Image', 'FreeSASA', among others.
-
-    Returns:
-    - dict: A dictionary containing the computed descriptors for the molecule. Each key in the 
-      dictionary corresponds to a descriptor name, and the associated value is the computed descriptor.
-      If 'Image' is selected, an additional key 'Image' with the base64 encoded PNG image of the 
-      molecule is included. If 'FreeSASA' is selected, the computed SASA value is included under 
-      the 'FreeSASA' key. If the SMILES string is invalid, the dictionary contains a key 'Error' 
-      with an error message.
-    - str or None: A base64 encoded PNG image string of the molecule if 'Image' is in the selected 
-      options. Otherwise, None.
-
-    Raises:
-    - This function does not explicitly raise any exceptions but might implicitly raise exceptions
-      related to invalid SMILES strings, failed descriptor computations, or image generation failures.
-
-    Example Usage:
-    ```python
-    descriptors, image_str = compute_descriptors("CCO", ["SMILES", "Image", "lipinski"])
-    print(descriptors)  # {'SMILES': 'CCO', 'Image': <base64_str>, 'lipinski': {...}}
-    ```
-    """
     molecule = Chem.MolFromSmiles(smiles)
     descriptors = {}
     img_str = None  # Initialize img_str here
@@ -198,26 +151,6 @@ def compute_descriptors(smiles, selected_options):
 
 
 def compute_descriptors2(smiles, selected_options):
-    """
-    Compute various chemical descriptors and potentially an image for a given molecule.
-    NOTE: This function is a modified version of the compute_descriptors function above.
-
-    Parameters:
-    - smiles (str): A SMILES string representing the molecule.
-    - selected_options (list of str): A list of descriptor options to compute. Options can
-        include 'chem', 'lipinski', 'crippen', 'qed', 'Image', 'FreeSASA', among others.
-
-    Returns:
-    - dict: A dictionary containing the computed descriptors for the molecule. Each key in the
-        dictionary corresponds to a descriptor name, and the associated value is the computed descriptor.
-        If 'Image' is selected, an additional key 'Image' with the base64 encoded PNG image of the
-        molecule is included. If 'FreeSASA' is selected, the computed SASA value is included under
-        the 'FreeSASA' key. If the SMILES string is invalid, the dictionary contains a key 'Error'
-        with an error message.
-    - str or None: A base64 encoded PNG image string of the molecule if 'Image' is in the selected
-        options. Otherwise, None.
-    
-    """
     molecule = Chem.MolFromSmiles(smiles)
     descriptors = {}
     img_str = None  # Initialize img_str here
@@ -306,9 +239,6 @@ def compute_descriptors2(smiles, selected_options):
 
 
 def get_atom_counts(molecule):
-    """
-    Returns a dictionary of the number of atoms of each type in the molecule.
-    """
     atom_counts = OrderedDict()
     # Convert implicit hydrogens to explicit ones
     mol_with_hydrogens = Chem.AddHs(molecule)
@@ -323,8 +253,6 @@ def get_atom_counts(molecule):
 
 
 
-#############################################################
-# These are the routes for the other pages
 @app.route('/feedback')
 def feedback():
     return render_template('feedback.html')
@@ -341,6 +269,9 @@ def docs():
 def about():
     return render_template('about.html')
 
+
+import os
+
 @app.route('/editor')
 def editor():
     # Get the directory of the current script
@@ -354,14 +285,10 @@ def editor():
 @app.route('/editor/gui/<path:filename>')
 def editor_resources(filename):
     return send_from_directory('frontend/gui', filename)
-#############################################################
 
 
 @app.route('/download_csv', methods=['POST'])
 def download_csv():
-    """
-    Download a CSV file containing the computed descriptors for the input molecules.
-    """
     
     # Fetching the selected options again
     selected_options = request.form.getlist('displayOptions')
