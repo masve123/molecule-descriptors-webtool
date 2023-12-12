@@ -84,7 +84,7 @@ def get_all_descriptors():
         'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction) if filter_method(name)},
         'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction) if filter_method(name)},
         'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction) if filter_method(name)},
-        'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if filter_method(name)},
+        #'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if filter_method(name)},
     }
     
     # Manually added methods
@@ -95,7 +95,7 @@ def get_all_descriptors():
 
 ### Checks if the mtehod contains name of methods that dont work. Manual tests
 def filter_method(name):
-        not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts']
+        not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts', 'ads']
         #not_working_methods = []
         for not_working in not_working_methods:
             if not_working.lower() in name.lower():

@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
-    <script type="text/javascript" language="javascript" src="{{ url_for('static', filename='editor-molecules/node_modules/jsme-editor/jsme.nocache.js') }}"></script>
+    <script type="text/javascript" language="javascript"
+        src="{{ url_for('static', filename='editor-molecules/node_modules/jsme-editor/jsme.nocache.js') }}"></script>
     <title>MolDescriptor</title>
 </head>
 
@@ -22,7 +23,9 @@
     </div>
     <div class="form-container">
         <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
-        <div class="app-description">MolDescriptor is a webtool for calculating chemical descriptors from <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different molecules using SMILES-strings as an input</div>
+        <div class="app-description">MolDescriptor is a webtool for calculating chemical descriptors from <a
+                href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different
+            molecules using SMILES-strings as an input</div>
         <form action="/identify_molecule" method="post" enctype="multipart/form-data">
             <div class="input-container">
                 <input type="text" id="smiles" name="inputField"
@@ -45,16 +48,18 @@
                     <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">RDKit Crippen</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
                     <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div>
+                    <!--<div class="tab" onclick="showTab(event, 'rdkit-AllChem')">RDKit AllChem</div> -->
                     <div class="tab active" onclick="showTab(event, 'search-tab')">Search descriptors</div>
                 </ul>
             </div>
 
-            
+
 
             <div class="tab-contents">
                 <div id="search-tab" class="tab-content" style="display: block;">
-                    <p class="search-description">Descriptor names need to match the ones which can be found in the official RDKit-documentation. A comprehensive list of available descriptors and how they work can be found <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.</p>
+                    <p class="search-description">Descriptor names need to match the ones which can be found in the
+                        official RDKit-documentation. A comprehensive list of available descriptors and how they work
+                        can be found <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.</p>
                     <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
                     <div id="searchResults" class="checkbox-container"></div>
                 </div>
@@ -104,7 +109,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div id="rdkit-AllChem" class="tab-content" style="display: none;">
+                <!--<div id="rdkit-AllChem" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.allchem %}
                         <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
@@ -112,7 +117,7 @@
                         {% endfor %}
                     </div>
                 </div>
-
+            -->
             </div>
         </form>
 
@@ -188,29 +193,29 @@
         }
 
         function jsmeOnLoad() {
-    if (!window.jsmeApplet) {
-        window.jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
+            if (!window.jsmeApplet) {
+                window.jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
 
-        // Event listener for when the molecule changes
-        window.jsmeApplet.setAfterStructureModifiedCallback(function () {
-            var smiles = window.jsmeApplet.smiles(); // Get the SMILES string of the drawn molecule
-            var formattedSmiles = smiles.replace(/\n/g, ','); // Replace newline with comma
-            document.getElementById('smiles').value = formattedSmiles; // Update the input field
-        });
-    }
-}
-
-
-
-    function openMoleculeDrawer() {
-        var jsmeContainer = document.getElementById('jsme_container');
-        if (jsmeContainer.style.display === 'none') {
-            jsmeContainer.style.display = 'block';
-            jsmeOnLoad(); // Load JSME if not already loaded
-        } else {
-            jsmeContainer.style.display = 'none';
+                // Event listener for when the molecule changes
+                window.jsmeApplet.setAfterStructureModifiedCallback(function () {
+                    var smiles = window.jsmeApplet.smiles(); // Get the SMILES string of the drawn molecule
+                    var formattedSmiles = smiles.replace(/\n/g, ','); // Replace newline with comma
+                    document.getElementById('smiles').value = formattedSmiles; // Update the input field
+                });
+            }
         }
-    }
+
+
+
+        function openMoleculeDrawer() {
+            var jsmeContainer = document.getElementById('jsme_container');
+            if (jsmeContainer.style.display === 'none') {
+                jsmeContainer.style.display = 'block';
+                jsmeOnLoad(); // Load JSME if not already loaded
+            } else {
+                jsmeContainer.style.display = 'none';
+            }
+        }
 
 
         document.getElementById('csvFile').addEventListener('change', function () {
