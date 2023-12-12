@@ -209,13 +209,21 @@
 
         function openMoleculeDrawer() {
             var jsmeContainer = document.getElementById('jsme_container');
+            var drawButton = document.querySelector('.draw-button');
+
             if (jsmeContainer.style.display === 'none') {
                 jsmeContainer.style.display = 'block';
                 jsmeOnLoad(); // Load JSME if not already loaded
+                drawButton.classList.add('draw-button-active');
+                drawButton.textContent = 'Close'; // Change button text to 'Close'
             } else {
                 jsmeContainer.style.display = 'none';
+                drawButton.classList.remove('draw-button-active');
+                drawButton.textContent = 'Draw Molecules'; // Change button text back to 'Draw Molecules'
             }
         }
+
+
 
 
         document.getElementById('csvFile').addEventListener('change', function () {

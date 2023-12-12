@@ -341,3 +341,13 @@ input[type="text"] {
     padding: 8px; /* More padding */
     margin-bottom: 15px; /* Spacing below the input field */
 }
+
+.draw-button-active {
+    background-color: #ce890a; /* Slightly different shade to indicate active state */
+    box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.2); /* Inward shadow for depth */
+    border: 1px solid #d58500; 
+}
+
+.draw-button, .draw-button-active {
+    width: 170px; /* Set a fixed width -> Temporary change so that the button has the same width when pressed */
+}
