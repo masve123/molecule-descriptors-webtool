@@ -39,8 +39,32 @@
                 <input type="file" id="csvFile" name="csvFile" accept=".csv">
                 <button type="button" class="draw-button" onclick="openMoleculeDrawer()">Draw Molecules</button>
             </div>
-            <!-- Tabs navigation -->
+
             <div id="jsme_container" style="display: none; width: 380px; height: 340px; margin: auto;"></div>
+
+            <div class="tab" onclick="showTab(event, 'common-descriptors')">Common Descriptors</div>
+            <div id="common-descriptors" class="tab-content" style="display: none;">
+                <div class="select-all-container">
+                    <button type="button" id="selectAllButton" onclick="toggleSelectDeselect()">Select All</button>
+                </div>
+                <div class="checkbox-container">
+                    <label><input type="checkbox" name="displayOptions" value="MolWt"> Molecular Weight</label>
+                    <label><input type="checkbox" name="displayOptions" value="MolLogP"> LogP</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumHDonors"> Number of Hydrogen Bond Donors</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumHAcceptors"> Number of Hydrogen Bond Acceptors</label>
+                    <label><input type="checkbox" name="displayOptions" value="TPSA"> Topological Polar Surface Area</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumRotatableBonds"> Number of Rotatable Bonds</label>
+                    <label><input type="checkbox" name="displayOptions" value="FractionCSP3"> Fractional Polar Surface Area</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumAromaticRings"> Number of Aromatic Rings</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumAliphaticRings"> Number of Aliphatic Rings</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumSaturatedRings"> Number of Saturated Rings</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumHeteroatoms"> Number of Heteroatoms</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumNitrogens"> Number of Nitrogen Atoms</label>
+                    <label><input type="checkbox" name="displayOptions" value="NumOxygens"> Number of Oxygen Atoms</label>
+                </div>
+                
+            </div>
+
             <div class="tabs">
                 <ul class="tab-list">
                     <div class="tab active" onclick="showTab(event, 'search-tab')">Search descriptors</div>
@@ -205,6 +229,22 @@
         }
 
 
+        function toggleSelectDeselect() {
+            var selectAllButton = document.getElementById('selectAllButton');
+            var checkboxes = document.querySelectorAll('#common-descriptors .checkbox-container input[type="checkbox"]');
+            
+            if (selectAllButton.innerHTML === "Select All") {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = true;
+                }
+                selectAllButton.innerHTML = "Deselect All";
+            } else {
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = false;
+                }
+                selectAllButton.innerHTML = "Select All";
+            }
+        }
 
         function openMoleculeDrawer() {
             var jsmeContainer = document.getElementById('jsme_container');
