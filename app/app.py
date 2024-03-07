@@ -77,8 +77,6 @@ def generate_csv(data):
 
 import inspect
 
-# ... and other relevant modules
-
 def get_all_descriptors():
     all_descriptors = {
         'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if filter_method(name)},
