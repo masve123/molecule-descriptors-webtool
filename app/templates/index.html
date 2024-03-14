@@ -1,138 +1,331 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon/favicon.ico') }}">
-    <script type="text/javascript" language="javascript"
-        src="{{ url_for('static', filename='editor-molecules/node_modules/jsme-editor/jsme.nocache.js') }}"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      rel="shortcut icon"
+      href="{{ url_for('static', filename='favicon/favicon.ico') }}"
+    />
+    <script
+      type="text/javascript"
+      language="javascript"
+      src="{{ url_for('static', filename='editor-molecules/node_modules/jsme-editor/jsme.nocache.js') }}"
+    ></script>
     <title>MolDescriptor</title>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="top-bar">
-        <div class="logo"><a class="title-link" href="{{ url_for('index') }}">MolDescriptor</a></div>
-        <div class="links">
-            <a href="{{ url_for('feedback') }}" class="feedback-link">FEEDBACK</a>
-            <a href="{{ url_for('docs') }}" class="docs-link">HELP</a>
-            <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
-        </div>
+      <div class="logo">
+        <a class="title-link" href="{{ url_for('index') }}">MolDescriptor</a>
+      </div>
+      <div class="links">
+        <a href="{{ url_for('feedback') }}" class="feedback-link">FEEDBACK</a>
+        <a href="{{ url_for('docs') }}" class="docs-link">HELP</a>
+        <a href="{{ url_for('about') }}" class="about-link">ABOUT</a>
+      </div>
     </div>
     <div class="form-container">
-        <h1 class="subheader"><span class="mol">Mol</span><span class="descriptor">Descriptor</span></h1>
-        <div class="app-description">MolDescriptor is a webtool for calculating chemical descriptors from <a
-                href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">RDKit packages</a> from different
-            molecules using SMILES-strings as an input</div>
-        <form action="/identify_molecule" method="post" enctype="multipart/form-data">
-            <div class="input-container">
-                <input type="text" id="smiles" name="inputField"
-                    placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)" required>
-                <input type="submit" value="Get Result">
+      <h1 class="subheader">
+        <span class="mol">Mol</span><span class="descriptor">Descriptor</span>
+      </h1>
+      <div class="app-description">
+        MolDescriptor is a webtool for calculating chemical descriptors from
+        <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst"
+          >RDKit packages</a
+        >
+        from different molecules using SMILES-strings as an input
+      </div>
+      <form
+        action="/identify_molecule"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div class="input-container">
+          <input
+            type="text"
+            id="smiles"
+            name="inputField"
+            placeholder="Type your molecule's SMILES here (e.g., n1ccccc1)"
+            required
+          />
+          <input type="submit" value="Get Result" />
+        </div>
+        <div class="button-group">
+          <label for="csvFile" class="file-upload-label">Upload CSV</label>
+          <input
+            type="file"
+            id="csvFile"
+            name="csvFile"
+            accept=".csv"
+            onchange="this.form.submit()"
+          />
+          <!-- <input type="submit" formaction="/download_csv" value="Download CSV"> -->
+          <input type="file" id="csvFile" name="csvFile" accept=".csv" />
+          <button
+            type="button"
+            class="draw-button"
+            onclick="openMoleculeDrawer()"
+          >
+            Draw Molecules
+          </button>
+        </div>
+
+        <div
+          id="jsme_container"
+          style="display: none; width: 380px; height: 340px; margin: auto"
+        ></div>
+
+        <div class="tab" onclick="showTab(event, 'common-descriptors')">
+          Common Descriptors
+        </div>
+        <div id="common-descriptors" class="tab-content" style="display: none">
+          <div class="select-all-container">
+            <button
+              type="button"
+              id="selectAllButton"
+              onclick="toggleSelectDeselect()"
+            >
+              Select All
+            </button>
+          </div>
+          <div class="checkbox-container">
+            <label
+              ><input type="checkbox" name="displayOptions" value="MolWt" />
+              Molecular Weight</label
+            >
+            <label
+              ><input type="checkbox" name="displayOptions" value="MolLogP" />
+              LogP</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumHDonors"
+              />
+              Number of Hydrogen Bond Donors</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumHAcceptors"
+              />
+              Number of Hydrogen Bond Acceptors</label
+            >
+            <label
+              ><input type="checkbox" name="displayOptions" value="TPSA" />
+              Topological Polar Surface Area</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumRotatableBonds"
+              />
+              Number of Rotatable Bonds</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="FractionCSP3"
+              />
+              Fractional Polar Surface Area</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumAromaticRings"
+              />
+              Number of Aromatic Rings</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumAliphaticRings"
+              />
+              Number of Aliphatic Rings</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumSaturatedRings"
+              />
+              Number of Saturated Rings</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumHeteroatoms"
+              />
+              Number of Heteroatoms</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumNitrogens"
+              />
+              Number of Nitrogen Atoms</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="NumOxygens"
+              />
+              Number of Oxygen Atoms</label
+            >
+          </div>
+        </div>
+
+        <div class="tabs">
+          <ul class="tab-list">
+            <div class="tab active" onclick="showTab(event, 'search-tab')">
+              Search descriptors
             </div>
-            <div class="button-group">
-                <label for="csvFile" class="file-upload-label">Upload CSV</label>
-                <input type="file" id="csvFile" name="csvFile" accept=".csv" onchange="this.form.submit()">
-                <input type="submit" formaction="/download_csv" value="Download CSV">
-                <input type="file" id="csvFile" name="csvFile" accept=".csv">
-                <button type="button" class="draw-button" onclick="openMoleculeDrawer()">Draw Molecules</button>
+            <div class="tab" onclick="showTab(event, 'rdkit-chem')">
+              RDKit Chem
             </div>
-
-            <div id="jsme_container" style="display: none; width: 380px; height: 340px; margin: auto;"></div>
-
-            <div class="tab" onclick="showTab(event, 'common-descriptors')">Common Descriptors</div>
-            <div id="common-descriptors" class="tab-content" style="display: none;">
-                <div class="select-all-container">
-                    <button type="button" id="selectAllButton" onclick="toggleSelectDeselect()">Select All</button>
-                </div>
-                <div class="checkbox-container">
-                    <label><input type="checkbox" name="displayOptions" value="MolWt"> Molecular Weight</label>
-                    <label><input type="checkbox" name="displayOptions" value="MolLogP"> LogP</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumHDonors"> Number of Hydrogen Bond Donors</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumHAcceptors"> Number of Hydrogen Bond Acceptors</label>
-                    <label><input type="checkbox" name="displayOptions" value="TPSA"> Topological Polar Surface Area</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumRotatableBonds"> Number of Rotatable Bonds</label>
-                    <label><input type="checkbox" name="displayOptions" value="FractionCSP3"> Fractional Polar Surface Area</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumAromaticRings"> Number of Aromatic Rings</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumAliphaticRings"> Number of Aliphatic Rings</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumSaturatedRings"> Number of Saturated Rings</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumHeteroatoms"> Number of Heteroatoms</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumNitrogens"> Number of Nitrogen Atoms</label>
-                    <label><input type="checkbox" name="displayOptions" value="NumOxygens"> Number of Oxygen Atoms</label>
-                </div>
-                
+            <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">
+              RDKit Lipinski
             </div>
-
-            <div class="tabs">
-                <ul class="tab-list">
-                    <div class="tab active" onclick="showTab(event, 'search-tab')">Search descriptors</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-chem')">RDKit Chem</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">RDKit Lipinski</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">RDKit Crippen</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-QED')">RDKit QED</div>
-                    <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">RDKit rdFreeSASA</div>
-                </ul>
+            <div class="tab" onclick="showTab(event, 'rdkit-Crippen')">
+              RDKit Crippen
             </div>
+            <div class="tab" onclick="showTab(event, 'rdkit-QED')">
+              RDKit QED
+            </div>
+            <div class="tab" onclick="showTab(event, 'rdkit-rdFreeSASA')">
+              RDKit rdFreeSASA
+            </div>
+          </ul>
+        </div>
 
-
-
-            <div class="tab-contents">
-                <div id="search-tab" class="tab-content" style="display: block;">
-                    <p class="search-description">Descriptor names need to match the ones which can be found in the
-                        official RDKit-documentation. A comprehensive list of available descriptors and how they work
-                        can be found <a href="https://rdkit.org/docs/source/rdkit.Chem.html" class="tekst">here</a>.</p>
-                    <input type="text" id="searchBar" placeholder="Search descriptors..." onkeyup="filterDescriptors()">
-                    <div id="searchResults" class="checkbox-container"></div>
-                </div>
-                <!-- RDKit Chem Tab Content -->
-                <div class="special-checkbox">
-                    <label><input type="checkbox" name="excludeInvalid" value="true" checked> Exclude Invalid SMILES
-                        from result</label>
-                    <label><input type="checkbox" name="displayOptions" value="Image" checked> Display Molecule</label>
-                </div>
-                <div id="rdkit-chem" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.chem %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="rdkit-Lipinski" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.lipinski %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="rdkit-Crippen" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.crippen %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="rdkit-QED" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.qed %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div id="rdkit-rdFreeSASA" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.rdfreesasa %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-                <!--<div id="rdkit-AllChem" class="tab-content" style="display: none;">
+        <div class="tab-contents">
+          <div id="search-tab" class="tab-content" style="display: block">
+            <p class="search-description">
+              Descriptor names need to match the ones which can be found in the
+              official RDKit-documentation. A comprehensive list of available
+              descriptors and how they work can be found
+              <a
+                href="https://rdkit.org/docs/source/rdkit.Chem.html"
+                class="tekst"
+                >here</a
+              >.
+            </p>
+            <input
+              type="text"
+              id="searchBar"
+              placeholder="Search descriptors..."
+              onkeyup="filterDescriptors()"
+            />
+            <div id="searchResults" class="checkbox-container"></div>
+          </div>
+          <!-- RDKit Chem Tab Content -->
+          <div class="special-checkbox">
+            <label
+              ><input
+                type="checkbox"
+                name="excludeInvalid"
+                value="true"
+                checked
+              />
+              Exclude Invalid SMILES from result</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                name="displayOptions"
+                value="Image"
+                checked
+              />
+              Display Molecule</label
+            >
+          </div>
+          <div id="rdkit-chem" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.chem %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div id="rdkit-Lipinski" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.lipinski %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div id="rdkit-Crippen" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.crippen %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div id="rdkit-QED" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.qed %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div id="rdkit-rdFreeSASA" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.rdfreesasa %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <!--<div id="rdkit-AllChem" class="tab-content" style="display: none;">
                     <div class="checkbox-container">
                         {% for descriptor_name in all_descriptors.allchem %}
                         <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
@@ -141,171 +334,206 @@
                     </div>
                 </div>
             -->
-            </div>
-        </form>
-
-        {% if descriptors_list %}
-        <h2>Descriptors:</h2>
-        {% for descriptors in descriptors_list %}
-        <h3>SMILES: {{ descriptors['SMILES'] }}</h3>
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Descriptor</th>
-                    <th>Value</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for key, value in descriptors.items() %}
-                <tr>
-                    <td>{{ key }}</td>
-                    <td>
-                        {% if key == "Image" %}
-                        <img src="data:image/png;base64,{{ value }}" alt="Molecule Image" width="200">
-                        <!-- Adjust width as needed -->
-                        {% else %}
-                        {{ value }}
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% endfor %}
-        <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
-        {% endif %}
-        {% if error %}
-        <div class="error-message">
-            {{ error }}
         </div>
-        {% endif %}
+      </form>
 
+      {% if descriptors_list %}
+      <h2>Descriptors:</h2>
+      {% for descriptors in descriptors_list %}
+      <h3>SMILES: {{ descriptors['SMILES'] }}</h3>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Descriptor</th>
+            <th>Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for key, value in descriptors.items() %}
+          <tr>
+            <td>{{ key }}</td>
+            <td>
+              {% if key == "Image" %}
+              <img
+                src="data:image/png;base64,{{ value }}"
+                alt="Molecule Image"
+                width="200"
+              />
+              <!-- Adjust width as needed -->
+              {% else %} {{ value }} {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endfor %}
+      <a href="{{ url_for('index') }}" class="refreshButton">Clear</a>
 
+      <!-- Conditionally display the Download CSV button -->
+      {% if result_available %}
+      <div
+        class="download-csv-container"
+        style="text-align: center; margin-top: 20px"
+      >
+        <form action="/download_csv" method="post">
+          <input
+            type="hidden"
+            name="inputField"
+            value="{{ request.form['inputField'] }}"
+          />
+          <input
+            type="submit"
+            value="Download CSV"
+            class="draw-button"
+          />
+        </form>
+      </div>
+      
+      {% endif %} {% endif %} {% if error %}
+      <div class="error-message">{{ error }}</div>
+      {% endif %}
     </div>
     <div class="rdkit-badge">
-        <a href="https://www.rdkit.org/"><img alt="Powered by RDKit"
-                src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"></a>
+      <a href="https://www.rdkit.org/"
+        ><img
+          alt="Powered by RDKit"
+          src="https://img.shields.io/badge/Powered%20by-RDKit-3838ff.svg?logo=data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQBAMAAADt3eJSAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAFVBMVEXc3NwUFP8UPP9kZP+MjP+0tP////9ZXZotAAAAAXRSTlMAQObYZgAAAAFiS0dEBmFmuH0AAAAHdElNRQfmAwsPGi+MyC9RAAAAQElEQVQI12NgQABGQUEBMENISUkRLKBsbGwEEhIyBgJFsICLC0iIUdnExcUZwnANQWfApKCK4doRBsKtQFgKAQC5Ww1JEHSEkAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMi0wMy0xMVQxNToyNjo0NyswMDowMDzr2J4AAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjItMDMtMTFUMTU6MjY6NDcrMDA6MDBNtmAiAAAAAElFTkSuQmCC"
+      /></a>
     </div>
 
     <script>
-        function showTab(event, tabId) {
-            // Hide all tab contents
-            var contents = document.querySelectorAll(".tab-content");
-            for (var i = 0; i < contents.length; i++) {
-                contents[i].style.display = 'none';
-            }
-
-            // Deactivate all tabs
-            var tabs = document.querySelectorAll(".tab");
-            for (var i = 0; i < tabs.length; i++) {
-                tabs[i].classList.remove('active');
-            }
-
-            document.getElementById(tabId).style.display = 'block';
-            event.target.classList.add('active');
-
-            if (tabId !== 'search-tab') {
-                var searchCheckboxes = document.querySelectorAll('#searchResults input[type="checkbox"]');
-                searchCheckboxes.forEach(function (sCheckbox) {
-                    var mainCheckbox = document.querySelector('.checkbox-container label input[value="' + sCheckbox.value + '"]');
-                    if (mainCheckbox) {
-                        mainCheckbox.checked = sCheckbox.checked;
-                    }
-                });
-            }
+      function showTab(event, tabId) {
+        // Hide all tab contents
+        var contents = document.querySelectorAll(".tab-content");
+        for (var i = 0; i < contents.length; i++) {
+          contents[i].style.display = "none";
         }
 
-        function jsmeOnLoad() {
-            if (!window.jsmeApplet) {
-                window.jsmeApplet = new JSApplet.JSME("jsme_container", "380px", "340px");
-
-                // Event listener for when the molecule changes
-                window.jsmeApplet.setAfterStructureModifiedCallback(function () {
-                    var smiles = window.jsmeApplet.smiles(); // Get the SMILES string of the drawn molecule
-                    var formattedSmiles = smiles.replace(/\n/g, ','); // Replace newline with comma
-                    document.getElementById('smiles').value = formattedSmiles; // Update the input field
-                });
-            }
+        // Deactivate all tabs
+        var tabs = document.querySelectorAll(".tab");
+        for (var i = 0; i < tabs.length; i++) {
+          tabs[i].classList.remove("active");
         }
 
+        document.getElementById(tabId).style.display = "block";
+        event.target.classList.add("active");
 
-        function toggleSelectDeselect() {
-            var selectAllButton = document.getElementById('selectAllButton');
-            var checkboxes = document.querySelectorAll('#common-descriptors .checkbox-container input[type="checkbox"]');
-            
-            if (selectAllButton.innerHTML === "Select All") {
-                for (var i = 0; i < checkboxes.length; i++) {
-                    checkboxes[i].checked = true;
-                }
-                selectAllButton.innerHTML = "Deselect All";
-            } else {
-                for (var i = 0; i < checkboxes.length; i++) {
-                    checkboxes[i].checked = false;
-                }
-                selectAllButton.innerHTML = "Select All";
+        if (tabId !== "search-tab") {
+          var searchCheckboxes = document.querySelectorAll(
+            '#searchResults input[type="checkbox"]'
+          );
+          searchCheckboxes.forEach(function (sCheckbox) {
+            var mainCheckbox = document.querySelector(
+              '.checkbox-container label input[value="' + sCheckbox.value + '"]'
+            );
+            if (mainCheckbox) {
+              mainCheckbox.checked = sCheckbox.checked;
             }
+          });
         }
+      }
 
-        function openMoleculeDrawer() {
-            var jsmeContainer = document.getElementById('jsme_container');
-            var drawButton = document.querySelector('.draw-button');
+      function jsmeOnLoad() {
+        if (!window.jsmeApplet) {
+          window.jsmeApplet = new JSApplet.JSME(
+            "jsme_container",
+            "380px",
+            "340px"
+          );
 
-            if (jsmeContainer.style.display === 'none') {
-                jsmeContainer.style.display = 'block';
-                jsmeOnLoad(); // Load JSME if not already loaded
-                drawButton.classList.add('draw-button-active');
-                drawButton.textContent = 'Close'; // Change button text to 'Close'
-            } else {
-                jsmeContainer.style.display = 'none';
-                drawButton.classList.remove('draw-button-active');
-                drawButton.textContent = 'Draw Molecules'; // Change button text back to 'Draw Molecules'
-            }
+          // Event listener for when the molecule changes
+          window.jsmeApplet.setAfterStructureModifiedCallback(function () {
+            var smiles = window.jsmeApplet.smiles(); // Get the SMILES string of the drawn molecule
+            var formattedSmiles = smiles.replace(/\n/g, ","); // Replace newline with comma
+            document.getElementById("smiles").value = formattedSmiles; // Update the input field
+          });
         }
+      }
 
+      function toggleSelectDeselect() {
+        var selectAllButton = document.getElementById("selectAllButton");
+        var checkboxes = document.querySelectorAll(
+          '#common-descriptors .checkbox-container input[type="checkbox"]'
+        );
 
+        if (selectAllButton.innerHTML === "Select All") {
+          for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = true;
+          }
+          selectAllButton.innerHTML = "Deselect All";
+        } else {
+          for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+          }
+          selectAllButton.innerHTML = "Select All";
+        }
+      }
 
+      function openMoleculeDrawer() {
+        var jsmeContainer = document.getElementById("jsme_container");
+        var drawButton = document.querySelector(".draw-button");
 
-        document.getElementById('csvFile').addEventListener('change', function () {
-            if (this.value) {
-                this.form.submit();
-            }
+        if (jsmeContainer.style.display === "none") {
+          jsmeContainer.style.display = "block";
+          jsmeOnLoad(); // Load JSME if not already loaded
+          drawButton.classList.add("draw-button-active");
+          drawButton.textContent = "Close"; // Change button text to 'Close'
+        } else {
+          jsmeContainer.style.display = "none";
+          drawButton.classList.remove("draw-button-active");
+          drawButton.textContent = "Draw Molecules"; // Change button text back to 'Draw Molecules'
+        }
+      }
+
+      document
+        .getElementById("csvFile")
+        .addEventListener("change", function () {
+          if (this.value) {
+            this.form.submit();
+          }
         });
 
-        function filterDescriptors() {
-            var input = document.getElementById('searchBar');
-            var filter = input.value.toLowerCase();
-            var labels = document.querySelectorAll('.checkbox-container label');
-            var searchResults = document.getElementById('searchResults');
-            searchResults.innerHTML = ''; // clear previous search results
+      function filterDescriptors() {
+        var input = document.getElementById("searchBar");
+        var filter = input.value.toLowerCase();
+        var labels = document.querySelectorAll(".checkbox-container label");
+        var searchResults = document.getElementById("searchResults");
+        searchResults.innerHTML = ""; // clear previous search results
 
-            if (!filter) return;
+        if (!filter) return;
 
-            for (var i = 0; i < labels.length; i++) {
-                var label = labels[i];
-                var labelText = label.textContent || label.innerText;
+        for (var i = 0; i < labels.length; i++) {
+          var label = labels[i];
+          var labelText = label.textContent || label.innerText;
 
-                if (labelText.toLowerCase().indexOf(filter) > -1) {
-                    // Check if the descriptor already exists in the search results
-                    var existingDescriptor = searchResults.querySelector('label input[value="' + label.querySelector('input').value + '"]');
-                    if (existingDescriptor) continue; // Skip
+          if (labelText.toLowerCase().indexOf(filter) > -1) {
+            // Check if the descriptor already exists in the search results
+            var existingDescriptor = searchResults.querySelector(
+              'label input[value="' + label.querySelector("input").value + '"]'
+            );
+            if (existingDescriptor) continue; // Skip
 
-                    var clonedLabel = label.cloneNode(true);
-                    clonedLabel.querySelector('input').addEventListener('change', function (e) {
-                        var checkbox = document.querySelector('.checkbox-container label input[value="' + e.target.value + '"]');
-                        checkbox.checked = e.target.checked;
-                    });
-                    clonedLabel.querySelector('input').addEventListener('change', function () {
-                        document.getElementById('searchBar').value = ''; // Clear the search field
-                    });
+            var clonedLabel = label.cloneNode(true);
+            clonedLabel
+              .querySelector("input")
+              .addEventListener("change", function (e) {
+                var checkbox = document.querySelector(
+                  '.checkbox-container label input[value="' +
+                    e.target.value +
+                    '"]'
+                );
+                checkbox.checked = e.target.checked;
+              });
+            clonedLabel
+              .querySelector("input")
+              .addEventListener("change", function () {
+                document.getElementById("searchBar").value = ""; // Clear the search field
+              });
 
-                    searchResults.appendChild(clonedLabel);
-                }
-            }
+            searchResults.appendChild(clonedLabel);
+          }
         }
-
-
+      }
     </script>
-
-</body>
-
+  </body>
 </html>
