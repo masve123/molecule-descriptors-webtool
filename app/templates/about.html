@@ -20,10 +20,10 @@
         <!-- Markdown-like content -->
         <h1>About MolDescriptor</h1>
         <p>
-            MolDescriptor is a simple tool for anyone who wants to know more about molecules. You just enter a molecule using the <a href="https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system">SMILES notation</a>, and our website tells you about its properties, like its weight or how it might behave in water. 
+            MolDescriptor is a simple, free webtool for anyone who wants to calculate molecular descriptors. Molecular structures are submitted in the <a href="https://en.wikipedia.org/wiki/Simplified_molecular-input_line-entry_system">SMILES notation</a>, select descriptors from the <a href="https://www.rdkit.org/docs/index.html">RDKIT package </a>  and the website will calculate these for you. You can downlaod the results as a CSV-file, and it's also possible to calculate a batch set of descriptors for multiple structures by uploading a CSV-file, which in turn can also be downloaded as a CSV-file.
         </p>
         <p>
-            MolDescriptor is still in development, and we need your help to make it better. If you have any suggestions, you can use the form on the <a href="{{ url_for('feedback') }}">feedback page</a>.
+            MolDescriptor is still in development, and we appreciate any feedback to improve our website. If you have any suggestions, you can use the form on the <a href="{{ url_for('feedback') }}">feedback page</a>.
         </p>
         <h2>RDkit</h2>
         <p>
@@ -31,12 +31,12 @@
         </p>
         <p><b>RDkit documentation</b></p>
         <p>
-            You can find the RDkit documentation on their website: <a href="https://rdkit.org/docs/index.html">https://rdkit.org/docs/index.html</a>
+            You can find the RDKit documentation here: <a href="https://rdkit.org/docs/index.html">https://rdkit.org/docs/index.html</a>
         </p>
         <h2>We're Open Source</h2>
         <p>
             This means anyone can see how our website works and even make it better. If you know how to code and want to help, you can! Plus, using our website is completely free. 
-            Here is our <a href="https://github.com/masve123/molecule-descriptors-webtool">github repository</a>
+            Here is our <a href="https://github.com/masve123/molecule-descriptors-webtool">GitHub repository</a>
         </p>
     
         <h2>Credits & Acknowledgments</h2>
@@ -49,6 +49,9 @@
             <li>
                 <strong><a href="https://github.com/jsme-editor/jsme-editor.github.io">JSME molecule editor</a></strong> by <a href="https://github.com/jsme-editor">jsme-editor</a><br>
                 Used for drawing molecules.
+            </li>
+            <li>
+                RDKit: Open-source cheminformatics. <a href="https://www.rdkit.org"> https://www.rdkit.org </a>
             </li>
         </ul>
     </div>
