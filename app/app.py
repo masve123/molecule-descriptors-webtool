@@ -9,6 +9,7 @@ import re
 
 from io import BytesIO
 import base64
+import os
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # for 16 MB max-limit
@@ -18,6 +19,16 @@ def index():
     all_descriptors = get_all_descriptors()
     return render_template('index.html', all_descriptors=all_descriptors)
 
+
+
+@app.context_processor
+def inject_defaults():
+    """
+    Inject default values into the template context.
+    Specifically, it sends the result_available variable as a default argument
+    to the template.
+    """
+    return {'result_available': False}
 
 
 @app.route('/identify_molecule', methods=['POST'])
@@ -55,8 +66,8 @@ def identify_molecule():
         descriptors, img_str = compute_descriptors(smiles, selected_options)
         computed_descriptors.append(descriptors)  # Renamed variable here
 
-    #print(selected_options)
-    return render_template('index.html', descriptors_list=computed_descriptors, all_descriptors=global_descriptors)
+    
+    return render_template('index.html', descriptors_list=computed_descriptors, all_descriptors=global_descriptors, result_available=True) # note that we are passing the global_descriptors variable here
     #return render_template('index.html', descriptors_list=all_descriptors)
 
 
@@ -181,7 +192,7 @@ def about():
     return render_template('about.html')
 
 
-import os
+
 
 @app.route('/editor')
 def editor():
