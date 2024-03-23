@@ -199,6 +199,12 @@
             <div class="tab" onclick="showTab(event, 'rdkit-chem')">
               RDKit Chem
             </div>
+            <div class="tab" onclick="showTab(event, 'rdkit-descriptor3d')">
+              RDKit Descriptor3D
+            </div>
+            <div class="tab" onclick="showTab(event, 'rdkit-rdmoldescriptors')">
+              RDKit rdMolDescriptors
+            </div>
             <div class="tab" onclick="showTab(event, 'rdkit-Lipinski')">
               RDKit Lipinski
             </div>
@@ -269,6 +275,34 @@
               {% endfor %}
             </div>
           </div>
+          <div id="rdkit-descriptor3d" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.descriptor3d %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
+          <div id="rdkit-rdmoldescriptors" class="tab-content" style="display: none">
+            <div class="checkbox-container">
+              {% for descriptor_name in all_descriptors.rdmoldescriptors %}
+              <label
+                ><input
+                  type="checkbox"
+                  name="displayOptions"
+                  value="{{ descriptor_name }}"
+                />
+                {{ descriptor_name }}</label
+              >
+              {% endfor %}
+            </div>
+          </div>
           <div id="rdkit-Lipinski" class="tab-content" style="display: none">
             <div class="checkbox-container">
               {% for descriptor_name in all_descriptors.lipinski %}
@@ -325,15 +359,6 @@
               {% endfor %}
             </div>
           </div>
-          <!--<div id="rdkit-AllChem" class="tab-content" style="display: none;">
-                    <div class="checkbox-container">
-                        {% for descriptor_name in all_descriptors.allchem %}
-                        <label><input type="checkbox" name="displayOptions" value="{{ descriptor_name }}"> {{
-                            descriptor_name }}</label>
-                        {% endfor %}
-                    </div>
-                </div>
-            -->
         </div>
       </form>
 
