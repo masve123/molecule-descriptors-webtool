@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, send_from_directory, render_template_string, Response
 from rdkit import Chem, rdBase
-from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski
+from rdkit.Chem import Draw, Descriptors, Crippen, QED, rdFreeSASA, AllChem, Lipinski, Descriptors3D, rdMolDescriptors
 from collections import OrderedDict
 from io import StringIO
 import csv
 from rdkit.Chem.AtomPairs import Pairs, Sheridan, Torsions, Utils
 import re
+import inspect
 
 from io import BytesIO
 import base64
@@ -68,10 +69,6 @@ def identify_molecule():
 
     
     return render_template('index.html', descriptors_list=computed_descriptors, all_descriptors=global_descriptors, result_available=True) # note that we are passing the global_descriptors variable here
-    #return render_template('index.html', descriptors_list=all_descriptors)
-
-
-
 
 
 def generate_csv(data):
@@ -86,19 +83,20 @@ def generate_csv(data):
 
     return output.getvalue()
 
-import inspect
-
 def get_all_descriptors():
+
     all_descriptors = {
         'chem': {name: func for name, func in inspect.getmembers(Descriptors, inspect.isfunction) if filter_method(name)},
         'lipinski': {name: func for name, func in inspect.getmembers(Lipinski, inspect.isfunction) if filter_method(name)},
         'crippen': {name: func for name, func in inspect.getmembers(Crippen, inspect.isfunction) if filter_method(name)},
         'qed': {name: func for name, func in inspect.getmembers(QED, inspect.isfunction) if filter_method(name)},
         'rdfreesasa': {name: func for name, func in inspect.getmembers(rdFreeSASA, inspect.isfunction) if filter_method(name)},
-        #'allchem': {name: func for name, func in inspect.getmembers(AllChem, inspect.isfunction) if filter_method(name)},
+        'descriptor3d': {name: func for name, func in inspect.getmembers(Descriptors3D, inspect.isfunction) if filter_method(name)},
+        'rdmoldescriptors': {name: func for name, func in inspect.getmembers(rdMolDescriptors, callable) if filter_method(name)}
     }
-    
+
     # Manually added methods
+    # For freeSASA
     all_descriptors['rdfreesasa']["FreeSASA"] = "FreeSASA"
     
 
@@ -106,7 +104,7 @@ def get_all_descriptors():
 
 ### Checks if the mtehod contains name of methods that dont work. Manual tests
 def filter_method(name):
-        not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts', 'ads']
+        not_working_methods = ["rundoctest", "auto", 'namedtuple', 'setdescriptordersion', '_init', '_readpatts', 'ads', 'AtomPairsParameters', 'CalcChiNn', 'CalcChiNv', 'CustomProp_VSA_', 'GetAtomFeatures', 'GetAtomPairAtomCode', 'GetAtomPairCode', 'GetHashedMorganFingerprint', 'GetMorganFingerprint', 'GetUSR', 'MakePropertyRangeQuery', 'NumRotatableBondsOptions', 'Properties', 'PropertyFunctor', 'PropertyRangeQuery']
         #not_working_methods = []
         for not_working in not_working_methods:
             if not_working.lower() in name.lower():
@@ -134,7 +132,15 @@ def compute_descriptors(smiles, selected_options):
                 descriptors[option] = all_descriptors['crippen'][option](molecule)
             elif option in all_descriptors['qed']:
                 descriptors[option] = all_descriptors['qed'][option](molecule)
-            # ... continue this pattern for other descriptor categories
+            elif option in all_descriptors['rdfreesasa']:
+                descriptors[option] = all_descriptors['rdfreesasa'][option](molecule)
+            elif option in all_descriptors['descriptor3d']:
+                AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
+                descriptors[option] = all_descriptors['descriptor3d'][option](molecule)
+            elif option in all_descriptors['rdmoldescriptors']:
+                AllChem.EmbedMolecule(molecule, AllChem.ETKDG())
+                descriptors[option] = all_descriptors['rdmoldescriptors'][option](molecule)
+            
 
             if 'Image' in selected_options:
                 img = Draw.MolToImage(molecule)
